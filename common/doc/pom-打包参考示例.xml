@@ -1,0 +1,209 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.hua</groupId>
+	<artifactId>maven-build</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	<name>maven-build</name>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.version>0.0.1</maven.version>
+		<maven.plugin.compiler.version>3.3</maven.plugin.compiler.version>
+		<maven.plugin.source.version>2.4</maven.plugin.source.version>
+		<maven.plugin.surefire.version>2.18.1</maven.plugin.surefire.version>
+		<maven.plugin.assembly.version>2.5.5</maven.plugin.assembly.version>
+		<maven.plugin.resources.version>2.7</maven.plugin.resources.version>
+		<maven.plugin.dependency.version>2.10</maven.plugin.dependency.version>
+		<maven.plugin.war.version>2.10</maven.plugin.war.version>
+		<maven.compiler.version>1.8</maven.compiler.version>
+	</properties>
+
+	<!-- 项目构建 -->
+	<build>
+		<plugins>
+			<!-- 编译插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.plugin.compiler.version}</version>
+				<configuration>
+					<compilerVersion>${maven.compiler.version}</compilerVersion>
+					<!-- 编译的类文件是否包含调试信息 -->
+					<debug>true</debug>
+					<!-- 是否展示详细的设置信息 -->
+					<detail>true</detail>
+					<!-- 指定编译文件的编码 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- 指定main排除的文件 (暂时无法实现) -->					
+					<excludes>
+						<exclude>/src/main/java/template/**/*</exclude>
+					</excludes>
+					<!-- 指定main包含的文件 -->
+<!-- 					
+					<includes>
+						<include></include>
+					</includes>
+-->
+					<!-- 编译失败是否停止 -->
+					<failOnError>true</failOnError>
+					<!-- 增量编译时检查哪些文件，默认.class -->
+<!-- 					<fileExtensions></fileExtensions> -->
+					<!-- 是否强制jdk版本 -->
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+					<!-- 是否分开执行编译，设置为true会导致部分输出中文乱码 -->
+					<fork>false</fork>
+					<!-- 输出源码文件名 -->
+					<outputFileName>a.jar</outputFileName>
+					<!-- 源码位置是否显示过期api被使用 -->
+					<showDeprecation>true</showDeprecation>
+					<!-- 是否输出编译警告 -->
+					<showWarnings>false</showWarnings>
+					<!-- 忽略测试 -->
+					<skip>true</skip>
+					<!-- 是否忽略main源码 -->
+					<skipMain>false</skipMain>
+					<!--  main编译器版本 source 和 target 要保持一致 -->
+					<source>${maven.compiler.version}</source>
+					<!-- main编译器版本 source 和 target 要保持一致 -->
+					<target>${maven.compiler.version}</target>
+					<!-- 测试编译器版本 source 和 target 要保持一致 -->					
+					<testSource>${maven.compiler.version}</testSource>
+					<!-- 测试编译器版本 source 和 target 要保持一致 -->							
+					<testTarget>${maven.compiler.version}</testTarget>
+					<!-- 输出编译器详细运行信息 -->
+					<verbose>false</verbose>
+				</configuration>
+			</plugin>
+			
+			<!-- 源码插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven.plugin.source.version}</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<!-- 源码打包方式 -->
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- 指定源码文件名 -->
+<!-- 					<finalName>maven-build-0.0.1-sources.jar</finalName> -->
+				</configuration>
+			</plugin>
+
+			<!-- 资源插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${maven.plugin.resources.version}</version>
+				<configuration>
+					<!-- 指定文件的编码 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<!-- 包含空目录 -->
+					<includeEmptyDirs>true</includeEmptyDirs>
+					<!-- 是否直接覆盖 -->
+					<overwrite>true</overwrite>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>true</includeEmptyDirs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>	
+			
+			<!-- 打包插件，打包当前项目相关文件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.plugin.surefire.version}</version>
+				<configuration>
+					<!-- 解决 控制台输出测试信息 - 乱码 -->
+					<argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
+					<!-- 指定main排除的文件 (暂时无法实现) -->					
+					<excludes>
+						<exclude>/src/main/java/template/**/*</exclude>
+					</excludes>
+					<reuseForks>true</reuseForks>
+					<!-- 打包时跳过单元测试 -->
+					<skip>true</skip>
+					<skipTests>true</skipTests>
+					<!-- 忽略测试失败 -->
+					<testFailureIgnore>true</testFailureIgnore>
+					<!-- 工作目录，${basedir} -->
+<!-- 					<workingDirectory></workingDirectory> -->
+				</configuration>
+			</plugin>
+
+			<!-- 输出依赖jar包到指定目录，在Goals 中输入: dependency:copy-dependencies -->
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<!-- 是否包含间接依赖包，选择 false 才能输出当前项目所有依赖的包 -->
+					<excludeTransitive>false</excludeTransitive>
+					<outputDirectory>${project.build.directory}/lib</outputDirectory>
+					<!-- 是否去掉版本信息 -->
+					<stripVersion>false</stripVersion>
+				</configuration>
+				<!-- 放入执行 -->
+				<executions>
+					<execution>
+						<id>copy</id>
+						<!-- 在安装的时候再打包 -->
+						<phase>install</phase>
+						<!-- 拷贝依赖 -->
+						<goals>
+							<goal>copy-dependencies</goal>						
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<!-- 是否包含间接依赖包，选择 false 才能输出当前项目所有依赖的包 -->
+							<excludeTransitive>false</excludeTransitive>
+							<!-- 是否去掉版本信息 -->
+							<stripVersion>false</stripVersion>	
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			
+			<!-- 组装插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven.plugin.assembly.version}</version>
+				<configuration>
+					<!-- 指定文件的编码 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<descriptorRefs>
+						<!-- 所有依赖包的名称 -->
+						 <descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>		
+			</plugin>
+						     													
+		</plugins>
+	</build>	
+
+	<dependencies>
+		<dependency>
+			<groupId>com.hua</groupId>
+			<artifactId>maven</artifactId>
+			<version>${maven.version}</version>
+		</dependency>
+		
+	</dependencies>
+
+</project>
