@@ -236,6 +236,161 @@ public final class EmptyUtil
 		return false;
 	}
 	
+	/**
+	 * 
+	 * 描述: 字符串是否为空
+	 * trim 之后""或null 
+	 * @author qye.zheng
+	 * 
+	 * @param target
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final String target) {
+		return !isEmpty(target);
+	}
+	
+	/**
+	 * 
+	 * 描述: StringBuilder 是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param builder
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final StringBuilder builder) {
+		return !isEmpty(builder);
+	}
+	
+	/**
+	 * 
+	 * 描述: StringBuffer 是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param buffer
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final StringBuffer buffer) {
+		return !isEmpty(buffer);
+	}
+	
+	/**
+	 * 
+	 * 描述: 数组是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param objArr
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Object[] objArr) {
+		return !isEmpty(objArr);
+	}
+	
+	/**
+	 * 
+	 * 描述: 集合是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Collection<?> collection) {
+		return !isEmpty(collection);
+	}
+	
+	/**
+	 * 
+	 * 描述: map是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Map<?, ?> map) {
+		return !isEmpty(map);
+	}
+	
+	/**
+	 * 
+	 * 描述: Short 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Short value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * 描述: Integer 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Integer value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * 描述: Long 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Long value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * 描述: Float 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Float value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * 描述: Double 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Double value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * 描述: Byte 值是否为空
+	 * @author qye.zheng
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static final boolean isNotEmpty(final Byte value) {
+		return !isEmpty(value);
+	}
+	
+	/**
+	 * 
+	 * @description 
+	 * @param value
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final boolean isNotEmpty(final Object value) {
+		return !isEmpty(value);
+	}
 	
 	// 模板
 	public static boolean isEmpty(final Object object) {
