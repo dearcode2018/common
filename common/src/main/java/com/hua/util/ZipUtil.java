@@ -678,5 +678,56 @@ public final class ZipUtil
 		
 		return destZipPath;
 	}
+	
+	/**
+	 * 
+	 * @description 判断压缩文件是否损坏
+	 * @param zipFile 压缩文件
+	 * .zip .jar 等压缩文件
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final boolean isDamage(final File zipFile)
+	{
+		/*
+		 * 通过构造方法是否有异常来判断文件是否损坏
+		 */
+		boolean flag = false;
+		ZipFile zipF = null;
+		try
+		{
+			zipF = new ZipFile(zipFile);
+		} catch (Exception e)
+		{ // 有异常，说明压缩文件可能损坏了
+			flag = true;
+		} finally
+		{ // 关闭资源
+			if (null != zipF)
+			{
+				try
+				{
+					zipF.close();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return flag;
+	}
+	
+	/**
+	 * 
+	 * @description 判断压缩文件是否损坏
+	 * @param zipFilePath 压缩文件路径
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final boolean isDamage(final String zipFilePath)
+	{
+		
+		return isDamage(new File(zipFilePath));
+	}
 
 }
