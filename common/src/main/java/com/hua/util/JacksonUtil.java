@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -74,6 +75,7 @@ public final class JacksonUtil
 		/** 初始化 反序列化-常用属性 */
 		// 1. 忽略json中有而JavaBean中没有的字段
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		// 或执行 
 		//objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		// 无效的子类 - 关闭错误
