@@ -77,7 +77,7 @@ public final class ProjectUtil
 	 * @author  qye.zheng
 	 * @param relativePath 例如 : /a/b/
 	 * @param project 相对路径是否是从当前项目开始
-	 * @return 返回例如: C:/Worksapce/a/b/
+	 * @return 返回例如: C:/Worksapce/a/b
 	 */
 	public static String getAbsolutePath(final String relativePath, final boolean project)
 	{

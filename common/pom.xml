@@ -36,7 +36,7 @@
 		<commons.lang.version>2.6</commons.lang.version>
 		<commons.lang3.version>3.3.2</commons.lang3.version>
 		<commons.beanutils.version>1.9.2</commons.beanutils.version>
-		<commons.codec.version>1.10</commons.codec.version>
+		<commons.codec.version>1.11</commons.codec.version>
 		<commons.compress.version>1.9</commons.compress.version>
 		<commons.cli.version>1.2</commons.cli.version>
 		<commons.configuration.version>1.10</commons.configuration.version>

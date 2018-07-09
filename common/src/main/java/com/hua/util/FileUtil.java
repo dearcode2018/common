@@ -48,6 +48,9 @@ public final class FileUtil
 	 
 	 */
 	
+	/* 是否追加模式 */
+	public static boolean append = false;
+	
 	/**
 	 * 构造方法
 	 * 描述: 
@@ -650,7 +653,7 @@ public final class FileUtil
 		BufferedWriter bufferedWriter = null;
 		try
 		{
-			outputStream = new FileOutputStream(file);
+			outputStream = new FileOutputStream(file, append);
 			writer = IOUtil.streamToWriter(outputStream, charset);
 			bufferedWriter = IOUtil.bufferedWriter(writer);
 			
@@ -734,7 +737,7 @@ public final class FileUtil
 		BufferedWriter bufferedWriter = null;
 		try
 		{
-			outputStream = new FileOutputStream(file);
+			outputStream = new FileOutputStream(file, append);
 			writer = IOUtil.streamToWriter(outputStream);
 			bufferedWriter = IOUtil.bufferedWriter(writer);
 			
@@ -787,7 +790,7 @@ public final class FileUtil
 		OutputStream outputStream = null;
 		try
 		{
-			outputStream = new FileOutputStream(file);
+			outputStream = new FileOutputStream(file, append);
 			outputStream.write(data);
 			
 			// 刷新缓存
