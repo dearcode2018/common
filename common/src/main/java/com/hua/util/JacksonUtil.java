@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -65,7 +66,7 @@ public final class JacksonUtil
 		// 不输出空的map 项
 		//objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		// 设置 null值的属性不输出 ""这种空字符串是可以输出的
-		//objectMapper.setSerializationInclusion(Include.NON_NULL);
+		objectMapper.setSerializationInclusion(Include.NON_NULL);
 		/*
 		 * 设置 null值的属性不输出 ""这种空字符串 或空集合(大小为0)也不会输出
 		 * 字符串、数组、集合通过判断长度或大小来控制是否输出
