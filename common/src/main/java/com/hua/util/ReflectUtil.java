@@ -14,9 +14,9 @@ import java.lang.reflect.Type;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.logging.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.core.internal.runtime.Log;
 
 import com.hua.annotation.FieldCheck;
 
@@ -34,7 +34,7 @@ public final class ReflectUtil
 
 	private static final String CGLIB_CLASS_SEPARATOR = "$$";
 	
-	private static final Logger logger = LoggerFactory.getLogger(ReflectUtil.class);
+	protected final static Logger log = LogManager.getLogger(ReflectUtil.class.getName());
 	
 	/**
 	 * 构造方法
@@ -81,17 +81,17 @@ public final class ReflectUtil
 					temp = (String) field.get(object);
 					if (StringUtil.isEmpty(temp))
 					{
-						log.info(methodName + " =====> 参数: " + field.getName() + " 不参与搜索!");
+						//log.info(methodName + " =====> 参数: " + field.getName() + " 不参与搜索!");
 					} else 
 					{
-						log.info(methodName + " =====> 参数: " + field.getName() + " = " + temp);
+						//log.info(methodName + " =====> 参数: " + field.getName() + " = " + temp);
 					}
 					continue;
 				}
 				// 非字符串类型的警告
 				if (null == field.get(object))
 				{
-					log.info(methodName + " =====> 参数: " + field.getName() + " 不参与搜索!");
+					//log.info(methodName + " =====> 参数: " + field.getName() + " 不参与搜索!");
 				} else
 				{
 					// 格式化日期时间类型 java.util.Date
@@ -99,17 +99,17 @@ public final class ReflectUtil
 					{
 						dateTime = (java.util.Date) field.get(object);
 						temp = DateTimeUtil.format(dateTime);
-						log.info(methodName + " =====> 参数: " + field.getName() + " = " + temp);
+						//log.info(methodName + " =====> 参数: " + field.getName() + " = " + temp);
 					} else
 					{
-						log.info(methodName  + " =====> 参数: " + field.getName() + " = " + field.get(object));
+						//log.info(methodName  + " =====> 参数: " + field.getName() + " = " + field.get(object));
 					}
 				}
 
 			}
 		} catch (Exception e)
 		{
-			log.error("methodName " + " =====> ", e);
+			//log.error("methodName " + " =====> ", e);
 		}
 	}
 	
@@ -122,7 +122,7 @@ public final class ReflectUtil
 	 * @return true - 验证通过，false - 存在为空数据，验证不通过
 	 * 字符串为空单独验证
 	 */
-	public static boolean notEmptyValidate(final Object target, final Log log)
+	public static boolean notEmptyValidate(final Object target)
 	{
 		boolean flag = false;
 		final Class<?> clazz = target.getClass();
@@ -160,7 +160,7 @@ public final class ReflectUtil
 						temp = (String) field.get(target);
 						if (StringUtil.isEmpty(temp))
 						{
-							log.info("notEmptyValidate =====> " + field.getName() + " 为空，校验不通过!");
+							//log.info("notEmptyValidate =====> " + field.getName() + " 为空，校验不通过!");
 							
 							return false;
 						} 
@@ -265,7 +265,7 @@ public final class ReflectUtil
 		try {
 			result = field.get(obj);
 		} catch (IllegalAccessException e) {
-			logger.error("不可能抛出的异常{}", e.getMessage());
+			//logger.error("不可能抛出的异常{}", e.getMessage());
 		}
 		return result;
 	}
@@ -283,7 +283,7 @@ public final class ReflectUtil
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
-			logger.error("不可能抛出的异常:{}", e.getMessage());
+			//logger.error("不可能抛出的异常:{}", e.getMessage());
 		}
 	}
 
@@ -442,19 +442,18 @@ public final class ReflectUtil
 		Type genType = clazz.getGenericSuperclass();
 
 		if (!(genType instanceof ParameterizedType)) {
-			logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+			//logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
 			return Object.class;
 		}
 
 		Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
 
 		if (index >= params.length || index < 0) {
-			logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
-					+ params.length);
+			//logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
 			return Object.class;
 		}
 		if (!(params[index] instanceof Class)) {
-			logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+			//logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
 			return Object.class;
 		}
 

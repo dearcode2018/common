@@ -23,12 +23,11 @@
 		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
 
 		<!-- 日志 -->
-		<slf4j.version>1.7.12</slf4j.version>
+		<slf4j.version>1.8.0-beta4</slf4j.version>
 		<commons.logging.version>1.2</commons.logging.version>
-		<log4j.version>1.2.17</log4j.version>
+		<log4j.version>2.11.2</log4j.version>
 
 		<!-- 测试 -->
-<!-- 		<junit.version>4.12</junit.version> -->
 		<dbunit.version>4.11</dbunit.version>
 		<unitils.version>4.11</unitils.version>
 
@@ -91,39 +90,17 @@
 	</properties>
 
 	<dependencies>
-		<!-- 日志 -->
+	
+		<!-- 日志 log4j 2.x -->
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-
-	<dependency> 
-		<groupId>org.slf4j</groupId> 
-		<artifactId>slf4j-log4j12</artifactId> 
-		<version>${slf4j.version}</version> 
-	</dependency>
-
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-simple</artifactId> 
-			<version>${slf4j.version}</version> </dependency> -->
-
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>${commons.logging.version}</version>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
 		</dependency>
-
-<!-- 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-		</dependency> -->
 
 		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
@@ -185,6 +162,12 @@
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons.beanutils.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>				
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -203,6 +186,12 @@
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>${commons.configuration.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>				
+				</exclusion>
+			</exclusions>			
 		</dependency>
 
 		<dependency>
@@ -215,6 +204,12 @@
 			<groupId>commons-digester</groupId>
 			<artifactId>commons-digester</artifactId>
 			<version>${commons.digester.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>				
+				</exclusion>
+			</exclusions>			
 		</dependency>
 
 		<!-- ant -->
@@ -334,6 +329,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
+			<exclusions>
+				<exclusion>
+				  <groupId>commons-logging</groupId>
+				  <artifactId>commons-logging</artifactId>				
+				</exclusion>
+			</exclusions>			
 		</dependency>
 
 		<dependency>
@@ -382,5 +383,17 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<dependencyManagement>
+	  <dependencies>
+	    <dependency>
+	      <groupId>org.apache.logging.log4j</groupId>
+	      <artifactId>log4j-bom</artifactId>
+	      <version>${log4j.version}</version>
+	      <scope>import</scope>
+	      <type>pom</type>
+	    </dependency>
+	  </dependencies>
+	</dependencyManagement>
 
 </project>

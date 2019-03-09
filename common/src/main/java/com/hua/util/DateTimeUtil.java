@@ -16,9 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.hua.constant.Constant;
 import com.hua.constant.FormatConstant;
 
@@ -768,8 +765,8 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 			}
 		} catch (ParseException e)
 		{
-			Log log = LogFactory.getLog(DateTimeUtil.class.getName());
-			log.warn("Can not parse [" + value + "] to java.util.Date");
+			//Log log = LogFactory.getLog(DateTimeUtil.class.getName());
+			//log.warn("Can not parse [" + value + "] to java.util.Date");
 		}
 		return date;
 	}

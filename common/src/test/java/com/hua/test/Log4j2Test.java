@@ -5,7 +5,7 @@
  * @author qye.zheng
  *  version 1.0
  */
-package template.code;
+package com.hua.test;
 
 //静态导入
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -44,9 +44,26 @@ import com.hua.test.BaseTest;
 //@DisplayName("测试类名称")
 //@Tag("测试类标签")
 //@Tags({@Tag("测试类标签1"), @Tag("测试类标签2")})
-public final class TemplateTest extends BaseTest {
+public final class Log4j2Test extends BaseTest {
 
-	
+	/**
+	 * 
+	 * 描述: 
+	 * @author qye.zheng
+	 * 
+	 */
+	//@DisplayName("test")
+	@Test
+	public void testLog4j2() {
+		try {
+			
+			log.info("test log4j2, info: " + Log4j2Test.class.getName());
+			log.trace("test log4j2 trace: " + Log4j2Test.class.getName());
+			//ConsoleAppender
+		} catch (Exception e) {
+			log.error("testLog4j2 =====> ", e);
+		}
+	}	
 	
 	
 	/**
