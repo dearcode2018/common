@@ -1,16 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<!-- <parent> <groupId>com.hua</groupId> <artifactId>parent</artifactId> 
-		<version>0.0.1</version> <relativePath>./parent/pom.xml</relativePath> </parent> -->
-
+	
 	<!-- 公共项目 -->
 	<parent>
 		<groupId>com.hua</groupId>
 		<artifactId>common-entire</artifactId>
 		<version>0.0.1</version>
-	</parent>	
+	</parent>
+	
 	<artifactId>common</artifactId>
 	<name>common</name>
 	<packaging>jar</packaging>
@@ -21,15 +20,6 @@
 
 		<maven.source.plugin.version>2.2.1</maven.source.plugin.version>
 		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
-
-		<!-- 日志 -->
-		<slf4j.version>1.8.0-beta4</slf4j.version>
-		<commons.logging.version>1.2</commons.logging.version>
-		<log4j.version>2.11.2</log4j.version>
-
-		<!-- 测试 -->
-		<dbunit.version>4.11</dbunit.version>
-		<unitils.version>4.11</unitils.version>
 
 		<!-- commons -->
 		<commons.lang.version>2.6</commons.lang.version>
@@ -59,7 +49,7 @@
 		<jdom.contrib.version>1.1.3</jdom.contrib.version>
 
 		<!-- json -->
-		<jackson.version>	2.9.7</jackson.version>
+		<jackson.version> 2.9.8</jackson.version>
 		<gson.version>2.3.1</gson.version>
 
 		<!-- io -->
@@ -72,7 +62,7 @@
 
 		<!-- file -->
 		<commons.fileupload.version>1.3.1</commons.fileupload.version>
-		<zip4j.version>1.3.2</zip4j.version>		
+		<zip4j.version>1.3.2</zip4j.version>
 
 		<!-- 任务调度 -->
 		<quartz.version>2.2.1</quartz.version>
@@ -90,60 +80,54 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<!-- 日志 log4j 2.x -->
 		<dependency>
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-api</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-core</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
 		</dependency>
 
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-api</artifactId>
-		    <version>${junit.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
 		</dependency>
-	
+
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-engine</artifactId>
-		    <version>${junit.version}</version>
-		</dependency>	
-		
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+
 		<!-- 参数化 -->
 		<dependency>
-		    <groupId>org.junit.jupiter</groupId>
-		    <artifactId>junit-jupiter-params</artifactId>
-		    <version>${junit.version}</version>
-		</dependency>	
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
 
 		<dependency>
-		    <groupId>org.junit.vintage</groupId>
-		    <artifactId>junit-vintage-engine</artifactId>
-		    <version>${junit.version}</version>
-		</dependency>	
-	
-		<dependency>
-		    <groupId>org.junit.platform</groupId>
-		    <artifactId>junit-platform-launcher</artifactId>
-		    <version>${junit.platform.version}</version>
-		</dependency>	
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
 
 		<dependency>
-		    <groupId>org.junit.platform</groupId>
-		    <artifactId>junit-platform-engine</artifactId>
-		    <version>${junit.platform.version}</version>
-		</dependency>	
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-engine</artifactId>
+			<version>${junit.platform.version}</version>
+		</dependency>
 
 		<dependency>
-		    <groupId>org.junit.platform</groupId>
-		    <artifactId>junit-platform-runner</artifactId>
-		    <version>${junit.platform.version}</version>
-		</dependency>	
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<version>${junit.platform.version}</version>
+		</dependency>
 
 		<!-- commons -->
 		<dependency>
@@ -164,8 +148,8 @@
 			<version>${commons.beanutils.version}</version>
 			<exclusions>
 				<exclusion>
-				  <groupId>commons-logging</groupId>
-				  <artifactId>commons-logging</artifactId>				
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -188,10 +172,10 @@
 			<version>${commons.configuration.version}</version>
 			<exclusions>
 				<exclusion>
-				  <groupId>commons-logging</groupId>
-				  <artifactId>commons-logging</artifactId>				
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
 				</exclusion>
-			</exclusions>			
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -206,10 +190,10 @@
 			<version>${commons.digester.version}</version>
 			<exclusions>
 				<exclusion>
-				  <groupId>commons-logging</groupId>
-				  <artifactId>commons-logging</artifactId>				
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
 				</exclusion>
-			</exclusions>			
+			</exclusions>
 		</dependency>
 
 		<!-- ant -->
@@ -331,10 +315,10 @@
 			<version>${dbcp2.version}</version>
 			<exclusions>
 				<exclusion>
-				  <groupId>commons-logging</groupId>
-				  <artifactId>commons-logging</artifactId>				
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
 				</exclusion>
-			</exclusions>			
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -343,11 +327,11 @@
 			<version>${c3p0.version}</version>
 		</dependency>
 
-	<dependency>
-	    <groupId>net.lingala.zip4j</groupId>
-	    <artifactId>zip4j</artifactId>
-	    <version>${zip4j.version}</version>
-	</dependency>
+		<dependency>
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>${zip4j.version}</version>
+		</dependency>
 
 
 	</dependencies>
@@ -383,17 +367,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<dependencyManagement>
-	  <dependencies>
-	    <dependency>
-	      <groupId>org.apache.logging.log4j</groupId>
-	      <artifactId>log4j-bom</artifactId>
-	      <version>${log4j.version}</version>
-	      <scope>import</scope>
-	      <type>pom</type>
-	    </dependency>
-	  </dependencies>
-	</dependencyManagement>
 
 </project>
