@@ -94,40 +94,34 @@
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<version>${junit.version}</version>
 		</dependency>
 
-		<!-- 参数化 -->
 		<dependency>
+		    <groupId>org.junit.vintage</groupId>
+		    <artifactId>junit-vintage-engine</artifactId>
+		    <version>${junit.version}</version>
+		</dependency>
+
+		<!-- 参数化 -->
+<!-- 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>${junit.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-engine</artifactId>
-			<version>${junit.platform.version}</version>
-		</dependency>
-
+		</dependency> -->
+		
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
 			<version>${junit.platform.version}</version>
 		</dependency>
+
+		<dependency>
+		    <groupId>org.junit.platform</groupId>
+		    <artifactId>junit-platform-engine</artifactId>
+		    <version>${junit.platform.version}</version>
+		</dependency>	
 
 		<!-- commons -->
 		<dependency>
@@ -309,7 +303,7 @@
 		</dependency>
 
 		<!-- 连接池 -->
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 			<version>${dbcp2.version}</version>
@@ -319,14 +313,14 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.mchange </groupId>
 			<artifactId>c3p0</artifactId>
 			<version>${c3p0.version}</version>
 		</dependency>
-
+ -->
 		<dependency>
 			<groupId>net.lingala.zip4j</groupId>
 			<artifactId>zip4j</artifactId>
