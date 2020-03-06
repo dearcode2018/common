@@ -30,6 +30,7 @@
 		<commons.cli.version>1.2</commons.cli.version>
 		<commons.configuration.version>1.10</commons.configuration.version>
 		<commons.digester.version>2.1</commons.digester.version>
+		<lombok.version>1.18.6</lombok.version>
 
 		<!-- ant -->
 		<apache.ant.version>1.9.4</apache.ant.version>
@@ -190,6 +191,12 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>			
+		</dependency>
+
 		<!-- ant -->
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -279,6 +286,18 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
+
+		<dependency>
+   			<groupId>com.fasterxml.jackson.module</groupId>
+		  	<artifactId>jackson-module-parameter-names</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>		
+		
+		<dependency>
+		  <groupId>com.fasterxml.jackson.datatype</groupId>
+		  <artifactId>jackson-datatype-jsr310</artifactId>		
+			<version>${jackson.version}</version>		
+		</dependency>		
 
 
 		<!-- io -->

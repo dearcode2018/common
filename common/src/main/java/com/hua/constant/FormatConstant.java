@@ -43,6 +43,8 @@ public interface FormatConstant
 	
 	/** end of 日期格式 */
 	
+	String TIME_ZONE = "GMT+8";
+	
 	/** begin 数字格式 */
 	
 	
@@ -52,4 +54,5 @@ public interface FormatConstant
 	/** begin Json格式 */
 	
 	/** end of Json格式 */
+	
 }
