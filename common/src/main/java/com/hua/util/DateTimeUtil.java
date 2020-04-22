@@ -47,11 +47,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 */
 	
 	// 1分钟 毫秒数
-	public final static long MILLISECOND_PER_MINUTE = 60L * 1000L;
-	// 1分钟 毫秒数
+	public final static long MILLISECOND_PER_MINUTE = 60L * 1000;
+	// 1小时 毫秒数
 	public final static long MILLISECOND_PER_HOUR = 60L * MILLISECOND_PER_MINUTE;
-	// 1分钟 毫秒数
+	// 1天 毫秒数
 	public final static long MILLISECOND_PER_DAY = 24L * MILLISECOND_PER_HOUR;
+	// 1周 毫秒数
 	public final static long MILLISECOND_PER_WEEK = 7L * MILLISECOND_PER_DAY;
 	
 	public static DateFormat dateFormat;

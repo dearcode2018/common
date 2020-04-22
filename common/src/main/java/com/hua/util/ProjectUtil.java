@@ -76,6 +76,20 @@ public final class ProjectUtil
 	 * 相对路径从工作空间、项目的根路径开始
 	 * @author  qye.zheng
 	 * @param relativePath 例如 : /a/b/
+	 * @return 返回例如: C:/Worksapce/a/b
+	 */
+	public static String getAbsolutePath(final String relativePath)
+	{
+		return getAbsolutePath(relativePath, true);
+	}
+	
+	/**
+	 * 
+	 * 描述: 基于工作空间级别
+	 * 根据资源的相对路径获取绝对路径
+	 * 相对路径从工作空间、项目的根路径开始
+	 * @author  qye.zheng
+	 * @param relativePath 例如 : /a/b/
 	 * @param project 相对路径是否是从当前项目开始
 	 * @return 返回例如: C:/Worksapce/a/b
 	 */

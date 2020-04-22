@@ -6,6 +6,8 @@
  */
 package com.hua.util;
 
+import java.util.Date;
+
 import com.hua.constant.Constant;
 
 /**
@@ -33,7 +35,7 @@ public final class ExceptionUtil extends org.apache.commons.lang3.exception.Exce
 	 * @return
 	 * @author qye.zheng
 	 */
-	public static String getAllCauseInfo(final Throwable throwable)
+	public static final String getAllCauseInfo(final Throwable throwable)
 	{
 		if (null == throwable)
 		{
@@ -52,4 +54,31 @@ public final class ExceptionUtil extends org.apache.commons.lang3.exception.Exce
 		
 		return builder.toString();
 	}
+	
+	/**
+	 * 
+	 * @description 获取异常踪迹
+	 * @param throwable
+	 * @author qianye.zheng
+	 */
+	public static final String getExceptionTrace(final Throwable throwable)
+	{
+		final StringBuilder builder = StringUtil.getBuilder();
+		// 时间
+		builder.append(DateTimeUtil.format(new Date()) + Constant.COLON + Constant.LINE_BREAK);
+		builder.append(throwable.toString());
+		final StackTraceElement[] traces = throwable.getStackTrace();
+		if (null != traces)
+		{
+			for (StackTraceElement e : traces)
+			{
+				// 加一个换行
+				builder.append(Constant.LINE_BREAK);
+				builder.append(e.toString());
+			}
+		}
+		
+		return builder.toString();
+	}
+	
 }
