@@ -13,6 +13,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * BeanUtil 描述:
  * 
@@ -21,6 +24,8 @@ import java.util.Map;
  */
 public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 
+	protected static final Logger log = LogManager.getLogger(BeanUtil.class.getName());
+	
 	/**
 	 * 构造方法 描述:
 	 * 
@@ -52,8 +57,7 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 	 * @param bean
 	 * @return
 	 */
-	public static final Map<String, Object> bean2MapIncludeNull(
-			final Object bean) {
+	public static final Map<String, Object> bean2MapIncludeNull(final Object bean) {
 		final boolean ignoreNull = false;
 
 		return bean2Map(bean, ignoreNull);
@@ -69,18 +73,15 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 	 *            是否忽略空值 忽略: 空值将不放入map中
 	 * @return
 	 */
-	public static final Map<String, Object> bean2Map(final Object bean,
-			final boolean ignoreNull) {
+	public static final Map<String, Object> bean2Map(final Object bean, final boolean ignoreNull) {
 		Map<String, Object> resultMap = null;
 		try {
 			//
 			final Class<?> clazz = bean.getClass();
-			resultMap = new HashMap<String, Object>();
 			// bean 信息
 			final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			// 属性 描述器
-			final PropertyDescriptor[] descriptors = beanInfo
-					.getPropertyDescriptors();
+			final PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
 			PropertyDescriptor descriptor = null;
 			String propertyName = null;
 			// get 方法
@@ -88,8 +89,10 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 			Object result = null;
 			final Object[] emptyArgs = new Object[0];
 			if (EmptyUtil.isEmpty(descriptors)) {
-				System.out.println("属性描述器为空，无法将bean转成map!");
+				// 属性描述器为空，无法将bean转成map!
+				return resultMap;
 			} else {
+				resultMap = new HashMap<>();
 				for (int i = 0; i < descriptors.length; i++) {
 					descriptor = descriptors[i];
 					// 属性名称
@@ -116,7 +119,7 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("bean 转成 map 异常: {}", e);
 		}
 
 		return resultMap;
@@ -127,19 +130,17 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 	 * 描述: 将 map 转成 javabean 将map中Object类的value通过反射注入到bean中
 	 * 
 	 * @author qye.zheng
-	 * @param clazz
 	 * @param map
+	 * @param clazz
 	 * @return
 	 */
-	public static <T> T map2Bean(final Class<T> clazz,
-			final Map<String, Object> map) {
+	public static final <T> T map2Bean(final Map<String, Object> map, final Class<T> clazz) {
 		T resultObj = null;
 		try {
 			// bean 信息
 			final BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			// 属性 描述器
-			final PropertyDescriptor[] descriptors = beanInfo
-					.getPropertyDescriptors();
+			final PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
 			PropertyDescriptor descriptor = null;
 			String propertyName = null;
 			final Object[] oneArgs = new Object[1];
@@ -150,25 +151,26 @@ public final class BeanUtil extends org.apache.commons.beanutils.BeanUtils {
 			 */
 			resultObj = clazz.newInstance();
 			if (EmptyUtil.isEmpty(descriptors)) {
-				System.out.println("属性描述器为空，无法将map转成bean!");
+				// 属性描述器为空，无法将map转成bean!
+				return resultObj;
 			} else {
 				for (int i = 0; i < descriptors.length; i++) {
 					descriptor = descriptors[i];
 					// 属性名称
 					propertyName = descriptor.getName();
-					if (map.containsKey(propertyName)) {
+					// 获取属性的值
+					oneArgs[0] = map.get(propertyName);
+					if (null != oneArgs[0]) {
 						// 含有该属性
 						// set 方法
 						writeMethod = descriptor.getWriteMethod();
-						// 获取属性的值
-						oneArgs[0] = map.get(propertyName);
 						// 反射调用
 						writeMethod.invoke(resultObj, oneArgs);
 					}
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("map 转成 bean 异常: {}", e);
 		}
 
 		return resultObj;

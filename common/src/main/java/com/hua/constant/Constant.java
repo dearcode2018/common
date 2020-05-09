@@ -200,6 +200,9 @@ public interface Constant {
 	 
 	 char CHAR_ONE = '0';
 	 
+	 // 点号 (英文句号)
+	 char CHAR_DOT = '.';
+	 
 	/** end of 数字常量 */
 	
 	/** begin 编码常量 */
@@ -238,6 +241,9 @@ public interface Constant {
 	
 	/** begin 时间常量 */
 	String TIME_ZONE_ID_CHINA = "GMT+08:00";
+	
+	// 中时区 (格林威治)
+	String TIME_ZONE_ID_MEDIAL = "GMT";
 	
 	/** end of 时间常量 */
 	

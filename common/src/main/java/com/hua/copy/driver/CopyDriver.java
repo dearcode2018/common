@@ -216,7 +216,7 @@ public class CopyDriver
 			System.out.println("使用自定义正则[ " + countCustomRegex + " ]次");
 		}
 		// 输出到文件
-		FileUtil.writeString(file, content);
+		FileUtil.writeString(file, content, false);
 	}
 	
 }

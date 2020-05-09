@@ -26,14 +26,14 @@ public final class ArrayUtil extends org.apache.commons.lang3.ArrayUtils
 	
 	/**
 	 * 
-	 * 描述: 将字符串数组拷贝为整型数组
+	 * 描述: 将数字字符串数组拷贝为整型数组
 	 * @author  qye.zheng
 	 * @param strArray
 	 * @return
 	 */
-	public static Integer[] copyStringToInteger(final String[] strArray)
+	public static final Integer[] copyStringToInteger(final String[] strArray)
 	{
-		Integer[] resultArray = new Integer[strArray.length];
+		final Integer[] resultArray = new Integer[strArray.length];
 		for (int i = 0; i < strArray.length; i++)
 		{
 			resultArray[i] = Integer.parseInt(strArray[i]);
@@ -49,7 +49,7 @@ public final class ArrayUtil extends org.apache.commons.lang3.ArrayUtils
 	 * @param intArray
 	 * @return
 	 */
-	public static int multipleResult(final Integer[] intArray)
+	public static final int multipleResult(final Integer[] intArray)
 	{
 		int result = 1;
 		for (int i = 0; i < intArray.length; i++)
@@ -68,12 +68,13 @@ public final class ArrayUtil extends org.apache.commons.lang3.ArrayUtils
 	 */
 	public static final void trim(final String[] array)
 	{
-		if (!EmptyUtil.isEmpty(array))
+		if (EmptyUtil.isNotEmpty(array))
 		{
 			for (int i = 0; i < array.length; i++)
-			{
+			{// 反向赋值，需用数组下标访问方式
 				array[i] = array[i].trim();
 			}
 		}
 	}
+	
 }

@@ -17,6 +17,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.hua.constant.Constant;
 
@@ -122,12 +124,12 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	{
 		boolean flag = false;
 		final byte[] data = new byte[size];
-		int length = Constant.NEGATIVE_ONE;
+		int length = -1;
 		try
 		{
-			while (Constant.NEGATIVE_ONE != (length = inputStream.read(data)))
+			while (-1 != (length = inputStream.read(data)))
 			{
-				outputStream.write(data, Constant.ZERO, length);
+				outputStream.write(data, 0, length);
 			}
 			// 刷新缓存
 			outputStream.flush();
@@ -192,12 +194,12 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	{
 		boolean flag = false;
 		final char[] data = new char[size];
-		int length = Constant.NEGATIVE_ONE;
+		int length = -1;
 		try
 		{
-			while (Constant.NEGATIVE_ONE != (length = reader.read(data)))
+			while (-1 != (length = reader.read(data)))
 			{
-				writer.write(data, Constant.ZERO, length);
+				writer.write(data, 0, length);
 			}
 			// 刷新缓存
 			writer.flush();
@@ -226,16 +228,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final Reader streamToReader(final InputStream inputStream)
 	{
-		Reader reader = null;
-		try
-		{
-			reader = new InputStreamReader(inputStream, Constant.CHART_SET_UTF_8);
-		} catch (UnsupportedEncodingException e)
-		{
-			e.printStackTrace();
-		}
-		
-		return reader;
+		return new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 	}
 	
 	/**
@@ -247,7 +240,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final Writer streamToWriter(final OutputStream outputStream)
 	{
-		return streamToWriter(outputStream, Constant.CHART_SET_UTF_8);
+		return streamToWriter(outputStream, StandardCharsets.UTF_8);
 	}
 	
 	/**
@@ -258,18 +251,9 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 * @param charset 字符集
 	 * @return
 	 */
-	public static final Writer streamToWriter(final OutputStream outputStream, final String charset)
+	public static final Writer streamToWriter(final OutputStream outputStream, final Charset charset)
 	{
-		Writer writer = null;
-		try
-		{
-			writer = new OutputStreamWriter(outputStream, charset);
-		} catch (UnsupportedEncodingException e)
-		{
-			e.printStackTrace();
-		}
-		
-		return writer;
+		return new OutputStreamWriter(outputStream, charset);
 	}
 	
 	/**
@@ -281,9 +265,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final BufferedInputStream bufferedStream(final InputStream inputStream)
 	{
-		final BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-		
-		return bufferedInputStream;
+		return new BufferedInputStream(inputStream);
 	}
 	
 	/**
@@ -295,9 +277,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final BufferedOutputStream bufferedStream(final OutputStream outputStream)
 	{
-		final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
-		
-		return bufferedOutputStream;
+		return new BufferedOutputStream(outputStream);
 	}
 	
 	/**
@@ -309,9 +289,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final BufferedReader bufferedReader(final Reader reader)
 	{
-		final BufferedReader bufferedReader = new BufferedReader(reader);
-
-		return bufferedReader;
+		return new BufferedReader(reader);
 	}
 	
 	/**
@@ -323,9 +301,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final BufferedWriter bufferedWriter(final Writer writer)
 	{
-		final BufferedWriter bufferedWriter = new BufferedWriter(writer);
-		
-		return bufferedWriter;
+		return new BufferedWriter(writer);
 	}
 	
 	/**
@@ -364,12 +340,12 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	{
 		final StringBuilder builder = StringUtil.getBuilder();
 		final char[] charArray = new char[1024];
-		int length = Constant.NEGATIVE_ONE;
+		int length = -1;
         try
 		{
-            while (Constant.NEGATIVE_ONE != (length = reader.read(charArray)))
+            while (-1 != (length = reader.read(charArray)))
             {
-            	builder.append(charArray, Constant.ZERO, length);
+            	builder.append(charArray, 0, length);
             }
 		} catch (IOException e)
 		{
@@ -379,9 +355,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 			close(reader);
 		}
         // 转成 字符数组
-        final char[] resultCharArray = builder.toString().toCharArray();
-        
-		return resultCharArray;
+		return builder.toString().toCharArray();
 	}
 	
 	/**
@@ -393,7 +367,7 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 */
 	public static final String getString(final InputStream inputStream)
 	{
-        return getString(inputStream, Constant.CHART_SET_UTF_8);
+        return getString(inputStream, StandardCharsets.UTF_8);
 	}
 	
 	/**
@@ -404,21 +378,22 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	 * @param charset 字符集
 	 * @return
 	 */
-	public static final String getString(final InputStream inputStream, final String charset)
+	public static final String getString(final InputStream inputStream, final Charset charset)
 	{
 		final StringBuilder builder = StringUtil.getBuilder();     
         String line = null;      
+    	final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));      
         try 
-        {      
-        	final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));      
-            while (null != (line = reader.readLine())) {  
+        {
+            while (null != (line = reader.readLine())) {
                 builder.append(line + Constant.LINE_BREAK);      
             }      
         } catch (IOException e) 
         {      
             e.printStackTrace();      
         } finally 
-        {      
+        {
+        	close(reader);
         	close(inputStream);
         }      
         
@@ -436,12 +411,12 @@ public final class IOUtil extends org.apache.commons.io.IOUtils
 	{
 		final StringBuilder builder = StringUtil.getBuilder();
 		final char[] charArray = new char[1024];
-		int length = Constant.NEGATIVE_ONE;
+		int length = -1;
         try
 		{
-            while (Constant.NEGATIVE_ONE != (length = reader.read(charArray)))
+            while (-1 != (length = reader.read(charArray)))
             {
-            	builder.append(charArray, Constant.ZERO, length);
+            	builder.append(charArray, 0, length);
             }
 		} catch (IOException e)
 		{

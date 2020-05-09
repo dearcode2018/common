@@ -8,11 +8,11 @@ package com.hua.util;
 
 /**
  * BooleanUtil
- * 描述: 
+ * 描述: 布尔
  * @author qye.zheng
  * 
  */
-public final class BooleanUtil
+public final class BooleanUtil extends org.apache.commons.lang3.BooleanUtils
 {
 	/**
 	 * 构造方法
@@ -23,4 +23,5 @@ public final class BooleanUtil
 	private BooleanUtil()
 	{
 	}
+	
 }

@@ -142,7 +142,7 @@ public final class ProjectCopyDriver extends CopyDriver
 			// 替换内容
 			content = content.replaceAll(copyParam.getProjectNameRegex(), copyParam.getProjectNameValue());
 			// 输出文件
-			flag = FileUtil.writeString(file, content);
+			flag = FileUtil.writeString(file, content, false);
 			
 			// 处理 web.xml 文件 TODO
 			

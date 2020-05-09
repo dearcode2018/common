@@ -649,7 +649,7 @@ public final class ZipUtil
 		} else
 		{
 			// 文件
-			destZipPath = sourceFile.getParent() + "/" + FileNameUtil.getPrefix(sourceFile.getName()) +Constant.DOT_MARK + ZipConstant.ZIP_FILE_SUFFIX;
+			destZipPath = sourceFile.getParent() + "/" + FileUtil.getPrefix(sourceFile.getName()) +Constant.DOT_MARK + ZipConstant.ZIP_FILE_SUFFIX;
 		}
 		
 		return destZipPath;
@@ -673,7 +673,7 @@ public final class ZipUtil
 		} else
 		{
 			// 文件
-			destZipPath = sourceFile.getParent() + File.separator + FileNameUtil.getPrefix(sourceFile.getName()) +Constant.DOT_MARK + ZipConstant.ZIP_FILE_SUFFIX;
+			destZipPath = sourceFile.getParent() + File.separator + FileUtil.getPrefix(sourceFile.getName()) +Constant.DOT_MARK + ZipConstant.ZIP_FILE_SUFFIX;
 		}
 		
 		return destZipPath;

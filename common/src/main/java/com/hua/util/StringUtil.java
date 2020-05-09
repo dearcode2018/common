@@ -11,9 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.text.DecimalFormat;
 
 import com.hua.constant.Constant;
 import com.hua.constant.RegexConstant;
@@ -286,44 +284,194 @@ public final class StringUtil extends org.apache.commons.lang3.StringUtils {
 	
 	/**
 	 * 
-	 * @description 获取异常链(所有) 信息
-	 * @param e
-	 * @return
+	 * 描述: 前置补0
 	 * @author qye.zheng
+	 * @param target 目标数字
+	 * @param totalLength 总长度
+	 * @return
 	 */
-	public static final String getExceptionStackTrace(final Throwable e)
+	public static String addZero(final int target, final int totalLength)
 	{
-		final Writer writer = new StringWriter();
-		final PrintWriter printWriter = new PrintWriter(writer);
-		e.printStackTrace(printWriter);
-		Throwable cause = e.getCause();
-		// 逐步获取 上一级(调用者) 异常
-		while (null != cause)
-		{
-			cause.printStackTrace(printWriter);
-			cause = cause.getCause();
-		}
-		printWriter.close();
+		// 强转为long型
+		final long temp = (long) target;
 		
-		return writer.toString();
+		return addZero(temp, totalLength);
 	}
 	
 	/**
 	 * 
-	 * @description 添加前缀零，例如 位数为3 的数字 1 补0后结果为 001
-	 * @param bitCount 位数
-	 * @param num 数字
+	 * 描述: 前置补0
+	 * @author qye.zheng
+	 * @param target 目标数字
+	 * @param totalLength 总长度
 	 * @return
-	 * @author qianye.zheng
 	 */
-	public static final String addPrefixZero(final Integer bitCount, final Integer num)
+	public static String addZero(final long target, final int totalLength)
 	{
-		String result = String.valueOf(num);
-		while (result.length() < bitCount)
+		String result = null;
+		result = String.valueOf(target);
+		if (result.length() >= totalLength)
 		{
-			result = "0" + result;
+			// 长度已满足总位数
+			
+			return result;
+		}
+		final StringBuilder builder = StringUtil.getBuilder();
+		// 0 的最多个数 (总位数 减一)
+		final int wantAdd = totalLength - result.length();
+		for (int i = 0; i < wantAdd; i++)
+		{
+			builder.append(Constant.ZERO);
+		}
+		// 加上目标部分
+		builder.append(result);
+		result = builder.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 
+	 * 描述: 前置补0
+	 * @author qye.zheng
+	 * @param target
+	 * @param totalLength 总长度
+	 * @return
+	 */
+	public static String addZero(final String target, final int totalLength)
+	{
+		if (target.length() >= totalLength)
+		{
+			// 长度已满足总位数
+			
+			return target;
+		}
+		String result = null;
+		final StringBuilder builder = StringUtil.getBuilder();
+		final int wantAdd = totalLength - target.length();
+		for (int i = 0; i < wantAdd; i++)
+		{
+			builder.append(Constant.ZERO);
+		}
+		// 加上目标部分
+		builder.append(target);
+		result = builder.toString();
+		
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @description 将小数格式化为整数，用于读取excel单元格小数数据，输出整数部分
+	 * @param obj
+	 * @return
+	 * @author qye.zheng
+	 */
+	public static final String format(final Object obj)
+	{
+		String result = null;
+		if (obj instanceof String)
+		{
+			result = (String) obj;
+		} else
+		{
+			if (null != obj)
+			{	/* 格式化excel中 数值类型为整数，消除小数点 */
+				final DecimalFormat decimalFormat = new DecimalFormat("#");
+				result = decimalFormat.format(obj);
+			}
 		}
 		
 		return result;
 	}
+	
+	/**
+	 * 
+	 * @description 字节数组转成16进制字符串
+	 * @param array
+	 * @param upperCase 是否转成大写
+	 * @return
+	 * @author qye.zheng
+	 */
+	public static final String parseByte2HexString(final byte[] array, final boolean upperCase)
+	{
+		/*
+		 * 0: 八进制的前缀
+		 * 0X: 十六进制的前缀
+		 * 二进制、十进制: 无前缀
+		 * (Binary 2进制)1111 = (OctaSystem 8进制)017 = (Decimal 10进制)15 = (Hexadecimal 16进制)0XF
+		 * 16进制单个数字最大值为F: 4位二进制，3位八进制，2位十进制
+		 * 单个字节: 最大值对应8位二进制，对应2位16进制
+		 */
+		final StringBuilder builder = StringUtil.getBuilder();
+		int value = 0;
+		for (int i = 0; i < array.length; i++)
+		{
+			String hex = null;
+			// 8位(包含符号位)字节 转换 为 32位整型
+			value = array[i] & 0XFF;
+			// 转成16进制格式的字符串 (0 ~ f)
+			hex = Integer.toHexString(value);
+			if (hex.length() == 1)
+			{
+				// 补 0
+				hex = '0' + hex;
+			}
+			// 大小写转换
+			if (upperCase) {// 大写
+				builder.append(hex.toUpperCase());
+			} else {// 小写
+				builder.append(hex.toLowerCase());
+			}
+		}
+		
+		return builder.toString();
+	}
+	
+	/**
+	 * 
+	 * @description 字节数组转成16进制大写字符串
+	 * @param array
+	 * @return
+	 * @author qye.zheng
+	 */
+	public static final String parseByte2HexString(final byte[] array)
+	{
+		return parseByte2HexString(array, true);
+	}
+	
+	/**
+	 * 
+	 * @description 16进制字符串转成字节数组
+	 * @param hexString 16进制字符串，支持任意位数的16进制数，奇数/偶数位均可，偶数位为标准的16进制数
+	 * @return
+	 * @author qye.zheng
+	 */
+	public static final byte[] parseHexString2Byte(String hexString)
+	{
+		byte[] array = null;
+		if (StringUtil.isEmpty(hexString))
+		{
+			return array;
+		}
+		// 基数
+		final int radix = 16;
+		if (0 != (hexString.length() % 2)) { // 奇数位，最高位补0
+			hexString = "0" + hexString;
+		}
+		// 字节数量，每2个字符对应一个字节
+		final int count = hexString.length() / 2;
+		array = new byte[count];
+		Integer decimal = -1;
+		for (int i = 0; i < count; i++)
+		{
+			final int start = i * 2;
+			decimal = Integer.parseInt(hexString.substring(start, start + 2), radix);
+			//
+			array[i] = decimal.byteValue();
+		}
+		
+		return array;
+	}
+	
 }

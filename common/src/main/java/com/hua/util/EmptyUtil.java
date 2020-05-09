@@ -39,14 +39,9 @@ public final class EmptyUtil
 	 * @param target
 	 * @return
 	 */
-	public static boolean isEmpty(final String target) {
+	public static final boolean isEmpty(final String target) {
 		// 为null 或 trim 之后为空字符串
-		if (null == target || Constant.WHITE_SPACE.equals(target.trim())) {
-
-			return true;
-		}
-		
-		return false;
+		return null == target || Constant.WHITE_SPACE.equals(target.trim());
 	}
 	
 	/**
@@ -57,30 +52,8 @@ public final class EmptyUtil
 	 * @param builder
 	 * @return
 	 */
-	public static boolean isEmpty(final StringBuilder builder) {
-		if (null == builder || Constant.WHITE_SPACE.equals(builder.toString())) {
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * 
-	 * 描述: StringBuffer 是否为空
-	 * @author qye.zheng
-	 * 
-	 * @param buffer
-	 * @return
-	 */
-	public static boolean isEmpty(final StringBuffer buffer) {
-		if (null == buffer || Constant.WHITE_SPACE.equals(buffer.toString())) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final StringBuilder builder) {
+		return null == builder || 0 ==builder.length();
 	}
 	
 	/**
@@ -91,13 +64,8 @@ public final class EmptyUtil
 	 * @param objArr
 	 * @return
 	 */
-	public static boolean isEmpty(final Object[] objArr) {
-		if (null == objArr || objArr.length == Constant.ZERO) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Object[] objArr) {
+		return null == objArr || objArr.length == 0;
 	}
 	
 	/**
@@ -108,13 +76,8 @@ public final class EmptyUtil
 	 * @param collection
 	 * @return
 	 */
-	public static boolean isEmpty(final Collection<?> collection) {
-		if (null == collection || collection.size() == Constant.ZERO) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Collection<?> collection) {
+		return null == collection || collection.isEmpty();
 	}
 	
 	/**
@@ -125,13 +88,8 @@ public final class EmptyUtil
 	 * @param map
 	 * @return
 	 */
-	public static boolean isEmpty(final Map<?, ?> map) {
-		if (null == map || map.size() == Constant.ZERO) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Map<?, ?> map) {
+		return null == map || map.size() == 0;
 	}
 	
 	/**
@@ -142,13 +100,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Short value) {
-		if (null == value || Constant.ZERO == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Short value) {
+		return null == value || 0 == value;
 	}
 	
 	/**
@@ -159,13 +112,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Integer value) {
-		if (null == value || Constant.ZERO == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Integer value) {
+		return null == value || 0 == value;
 	}
 	
 	/**
@@ -176,13 +124,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Long value) {
-		if (null == value || Constant.ZERO == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Long value) {
+		return null == value || 0 == value;
 	}
 	
 	/**
@@ -193,13 +136,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Float value) {
-		if (null == value || Constant.ZERO_FLOAT == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Float value) {
+		return null == value || Constant.ZERO_FLOAT == value;
 	}
 	
 	/**
@@ -210,13 +148,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Double value) {
-		if (null == value || Constant.ZERO_DOUBLE == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Double value) {
+		return null == value || Constant.ZERO_DOUBLE == value;
 	}
 	
 	/**
@@ -227,13 +160,8 @@ public final class EmptyUtil
 	 * @param value
 	 * @return
 	 */
-	public static boolean isEmpty(final Byte value) {
-		if (null == value || Constant.ZERO == value) {
-			
-			return true;
-		}
-		
-		return false;
+	public static final boolean isEmpty(final Byte value) {
+		return null == value || 0 == value;
 	}
 	
 	/**
@@ -259,18 +187,6 @@ public final class EmptyUtil
 	 */
 	public static final boolean isNotEmpty(final StringBuilder builder) {
 		return !isEmpty(builder);
-	}
-	
-	/**
-	 * 
-	 * 描述: StringBuffer 是否为空
-	 * @author qye.zheng
-	 * 
-	 * @param buffer
-	 * @return
-	 */
-	public static final boolean isNotEmpty(final StringBuffer buffer) {
-		return !isEmpty(buffer);
 	}
 	
 	/**
@@ -392,20 +308,15 @@ public final class EmptyUtil
 		return !isEmpty(value);
 	}
 	
-	// 模板
-	public static boolean isEmpty(final Object object) {
-		if (null == object)
-		{
-			
-			return true;
-		}
-		
-		return false;
+	/**
+	 * 
+	 * @description 
+	 * @param object
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final boolean isEmpty(final Object object) {
+		return (null == object);
 	}
-	
-	// 模板
-	public static boolean isEmpty() {
-		
-		return false;
-	}
+
 }

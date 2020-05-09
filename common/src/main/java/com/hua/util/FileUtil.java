@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import com.hua.constant.Constant;
 
@@ -47,9 +49,6 @@ public final class FileUtil
 	 绝对路径 - abstract path, 相对路径 - relative path
 	 
 	 */
-	
-	/* 是否追加模式 */
-	public static boolean append = false;
 	
 	/**
 	 * 构造方法
@@ -592,7 +591,7 @@ public final class FileUtil
 	 * @param charset 字符集
 	 * @return
 	 */
-	public static final String getString(final File file, final String charset)
+	public static final String getString(final File file, final Charset charset)
 	{
 		String data = null;
 		try
@@ -615,7 +614,7 @@ public final class FileUtil
 	 * @param charset 字符集
 	 * @return
 	 */
-	public static final String getString(final String filePath, final String charset)
+	public static final String getString(final String filePath, final Charset charset)
 	{
 		final File file = new File(filePath);
 		
@@ -642,10 +641,11 @@ public final class FileUtil
 	 * @author  qye.zheng
 	 * @param file
 	 * @param data
+	 * @param append 是否追加
 	 * @param charset 字符集
 	 * @return
 	 */
-	public static final boolean writeString(final File file, final String data, final String charset)
+	public static final boolean writeString(final File file, final String data, final String charset, final boolean append)
 	{
 		boolean flag = false;
 		OutputStream outputStream = null;
@@ -654,7 +654,7 @@ public final class FileUtil
 		try
 		{
 			outputStream = new FileOutputStream(file, append);
-			writer = IOUtil.streamToWriter(outputStream, charset);
+			writer = IOUtil.streamToWriter(outputStream, StandardCharsets.UTF_8);
 			bufferedWriter = IOUtil.bufferedWriter(writer);
 			
 			// 输出字符串
@@ -685,9 +685,9 @@ public final class FileUtil
 	 * @param data
 	 * @return
 	 */
-	public static final boolean writeString(final File file, final String data)
+	public static final boolean writeString(final File file, final String data, final boolean append)
 	{
-		return writeString(file, data, Constant.CHART_SET_UTF_8);
+		return writeString(file, data, Constant.CHART_SET_UTF_8, append);
 	}
 	
 	/**
@@ -697,13 +697,14 @@ public final class FileUtil
 	 * @param filePath
 	 * @param data
 	 * @param charset 字符集
+	 * @param append 是否追加
 	 * @return
 	 */
-	public static final boolean writeString(final String filePath, final String data, final String charset)
+	public static final boolean writeString(final String filePath, final String data, final String charset, final boolean append)
 	{
 		final File file = new File(filePath);
 		
-		return writeString(file, data, charset);
+		return writeString(file, data, charset, append);
 	}
 	
 	/**
@@ -714,11 +715,11 @@ public final class FileUtil
 	 * @param data
 	 * @return
 	 */
-	public static final boolean writeString(final String filePath, final String data)
+	public static final boolean writeString(final String filePath, final String data, final boolean append)
 	{
 		final File file = new File(filePath);
 		
-		return writeString(file, data);
+		return writeString(file, data, append);
 	}
 	
 	/**
@@ -727,9 +728,10 @@ public final class FileUtil
 	 * @author qye.zheng
 	 * @param file
 	 * @param data
+	 * @param append
 	 * @return
 	 */
-	public static final boolean writeCharArray(final File file, final char[] data)
+	public static final boolean writeCharArray(final File file, final char[] data, final boolean append)
 	{
 		boolean flag = false;
 		OutputStream outputStream = null;
@@ -769,11 +771,11 @@ public final class FileUtil
 	 * @param data
 	 * @return
 	 */
-	public static final boolean writeCharArray(final String filePath, final char[] data)
+	public static final boolean writeCharArray(final String filePath, final char[] data, final boolean append)
 	{
 		final File file = new File(filePath);
 		
-		return writeCharArray(file, data);
+		return writeCharArray(file, data, append);
 	}
 	
 	/**
@@ -782,9 +784,10 @@ public final class FileUtil
 	 * @author qye.zheng
 	 * @param file
 	 * @param data
+	 * @param append
 	 * @return
 	 */
-	public static final boolean writeByteArray(final File file, final byte[] data)
+	public static final boolean writeByteArray(final File file, final byte[] data, final boolean append)
 	{
 		boolean flag = false;
 		OutputStream outputStream = null;
@@ -816,11 +819,11 @@ public final class FileUtil
 	 * @param data
 	 * @return
 	 */
-	public static final boolean writeByteArray(final String filePath, final byte[] data)
+	public static final boolean writeByteArray(final String filePath, final byte[] data, final boolean append)
 	{
 		final File file = new File(filePath);
 		
-		return writeByteArray(file, data);
+		return writeByteArray(file, data, append);
 	}
 	
 	/**
@@ -903,10 +906,9 @@ public final class FileUtil
 		final String timestamp = String.valueOf(DateTimeUtil.getTimeInMillis());
 		final String numStr = RandomUtil.randomNumeric(5);
 		// 文件后缀，包含 .
-		final String suffix = uploadFilename.substring(uploadFilename.lastIndexOf("."));
-		final String newFilename = timestamp + numStr + suffix;
+		final String suffix = uploadFilename.substring(uploadFilename.lastIndexOf(Constant.CHAR_DOT));
 		
-		return newFilename;
+		return timestamp + numStr + suffix;
 	}
 	
 	/**
@@ -928,34 +930,134 @@ public final class FileUtil
 			e.printStackTrace();
 		}
 		final Reader reader = new InputStreamReader(inputStream);
-		final BufferedReader bufferedReader = new BufferedReader(reader);
 		
-		return bufferedReader;
+		return  new BufferedReader(reader);
 	}
 	
-	public static final  String toUtf8String(String s)
+	/* ###################### 文件名 ####################### */
+	
+	
+	/**
+	 * 
+	 * 描述: 获取文件名 - 前缀 (已排除路径部分)
+	 * @author qye.zheng
+	 * @param filePath
+	 * @return
+	 */
+	public static final  String getPrefix(final String filePath)
 	{
-	StringBuffer sb = new StringBuffer();
-	for (int i=0;i<s.length();i++) {
-	char c = s.charAt(i);
-	if (c >= 0 && c <= 255) {
-	sb.append(c);
-	} else {
-	byte[] b;
-	try {
-	b = Character.toString(c).getBytes("utf-8");
-	} catch (Exception ex) {
-	System.out.println(ex);
-	b = new byte[0];
+		/*
+		 从文件名后开始找，找到第一个 . 的位置作为endIndex
+		 含有斜杠或反斜杠，则startIndex为最后一个 斜杠或反斜杠的位置
+		 */
+		String result = null;
+		int startIndex = 0;
+		int endIndex = filePath.lastIndexOf(Constant.DOT_MARK);
+		if (filePath.contains(Constant.SLASH))
+		{
+			// 含有斜杠
+			startIndex = filePath.lastIndexOf(Constant.SLASH);
+			// 下一个位置
+			startIndex++;
+		} else if (filePath.contains(Constant.BACK_SLASH))
+		{
+			// 含有反斜杠
+			startIndex = filePath.lastIndexOf(Constant.BACK_SLASH);
+			// 下一个位置
+			startIndex++;
+		}
+		result = filePath.substring(startIndex, endIndex);
+		
+		return result;
 	}
-	for (int j = 0; j < b.length; j++) {
-	int k = b[j];
-	if (k < 0) k += 256;
-	sb.append("%" + Integer.toHexString(k).
-	toUpperCase());
+	
+	/**
+	 * 
+	 * 描述: 获取文件名 - 后缀
+	 * @author qye.zheng
+	 * @param filePath
+	 * @return
+	 */
+	public static final  String getSuffix(final String filePath)
+	{
+		/*
+		 从文件名后开始找，找到第一个 . 的位置 +1 作为 startIndex
+		 */
+		String result = null;
+		int startIndex = filePath.lastIndexOf(Constant.DOT_MARK) + 1;
+		result = filePath.substring(startIndex);
+		
+		return result;
 	}
+	
+	/**
+	 * 
+	 * 描述: 给文件名加盖时间戳 
+	 * @author  qye.zheng
+	 * @param filename (支持 有后缀名、无后缀名)，文件名不能携带路径部分
+	 * 没有后缀名，时间戳直接加盖在文件名后面，有时间戳则先拆开再拼接
+	 * @return
+	 */
+	public static final  String coverTimestamp(final String filename)
+	{
+		String result = null;
+		// 时间戳 yyyyMMddHHmmssSSS
+		String tsString = DateTimeUtil.getTsString();
+		final int index = filename.lastIndexOf(Constant.DOT_MARK);
+		if (Constant.NEGATIVE_ONE == index)
+		{
+			// 没有后缀名，直接用文件名盖上时间戳
+			result = filename + tsString;
+		} else {
+			// 有后缀名
+			final String prefix = filename.substring(Constant.ZERO, index);
+			final String suffix = filename.substring(index + 1);
+			// 拼接 - 盖上时间戳
+			result = prefix + tsString + Constant.DOT_MARK + suffix;
+		}
+		
+		return result;
 	}
+	
+	/**
+	 * 
+	 * 描述: 给文件名 添加前缀
+	 * @author qye.zheng
+	 * @param preffix 前缀
+	 * @param fileName
+	 * @return
+	 */
+	public static final String addPrefix(final String preffix, final String fileName)
+	{
+		return preffix + fileName;
 	}
-	return sb.toString();
-	}
+	
+	/**
+	 * 
+	 * 描述: 给文件名 添加后缀
+	 * @author qye.zheng
+	 * @param fileName
+	 * @param suffix 后缀
+	 * @return
+	 */
+	public static final String addSuffix(final String fileName, final String suffix)
+	{
+		int index = 0;
+		// 先判断是否有后缀名
+		if (Constant.NEGATIVE_ONE != (index = fileName.lastIndexOf(Constant.DOT_MARK)))
+		{
+			// 有 . 后缀名部分
+			String result = fileName.substring(Constant.ZERO, index) + suffix;
+			result += Constant.DOT_MARK + fileName.substring(index + Constant.ONE);
+			
+			return result;
+		} else
+		{
+			// 没有 . 后缀名部分，直接拼接在文件名之后
+			return fileName + suffix;
+		}
+	}	
+
+	
+	
 }

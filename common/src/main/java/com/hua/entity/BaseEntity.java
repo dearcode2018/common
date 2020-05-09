@@ -12,12 +12,15 @@ import java.io.Serializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import lombok.Data;
+
 /**
  * 描述: 
  * 
  * @author qye.zheng
  * BaseEntity
  */
+@Data
 public class BaseEntity implements Serializable {
 	
 	 /* long */
@@ -27,6 +30,8 @@ public class BaseEntity implements Serializable {
 	
 	/* 对象唯一id */
 	private Long oid;
+	
+	private String id;
 
 	/**
 	 * @return the oid

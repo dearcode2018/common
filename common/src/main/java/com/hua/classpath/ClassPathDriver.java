@@ -25,7 +25,7 @@ import org.jdom2.output.XMLOutputter;
 import com.hua.constant.Constant;
 import com.hua.util.ClassPathUtil;
 import com.hua.util.EmptyUtil;
-import com.hua.util.FileNameUtil;
+import com.hua.util.FileUtil;
 import com.hua.util.IOUtil;
 import com.hua.util.ProjectUtil;
 
@@ -195,7 +195,7 @@ public final class ClassPathDriver
 				}
 				
 				// 获取文件前缀名
-				jarFilePrefix = FileNameUtil.getPrefix(filename);
+				jarFilePrefix = FileUtil.getPrefix(filename);
 				// 组装成源码文件名 (zip或jar)
 				sourceFilename = jarFilePrefix + ClassPathConstant.SOURCE_SUFFIX_ZIP;
 				// 判断/doc/source下是否有zip文件，否则使用jar文件

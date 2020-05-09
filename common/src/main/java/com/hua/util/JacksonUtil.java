@@ -17,6 +17,10 @@ import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -32,6 +36,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.hua.constant.Constant;
 import com.hua.constant.FormatConstant;
 
@@ -42,9 +54,6 @@ import com.hua.constant.FormatConstant;
  */
 public final class JacksonUtil
 {
-	// 日期时间格式-默认采用
-	private static final DateFormat dateTimeFormat = 
-			new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss);
 
 	// 对象映射器
 	private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -56,7 +65,6 @@ public final class JacksonUtil
 	{
 		// 设置默认的日期处理格式
 		setDefaultDateFormat();
-		//objectMapper.setDateFormat(dateTimeFormat);
 		
 		/**
 		 * 去掉相关行的注释，即可启用其功能
@@ -67,6 +75,7 @@ public final class JacksonUtil
 		//objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		// 设置 null值的属性不输出 ""这种空字符串是可以输出的
 		objectMapper.setSerializationInclusion(Include.NON_NULL);
+		objectMapper.setSerializationInclusion(Include.NON_EMPTY);
 		/*
 		 * 设置 null值的属性不输出 ""这种空字符串 或空集合(大小为0)也不会输出
 		 * 字符串、数组、集合通过判断长度或大小来控制是否输出
@@ -97,25 +106,23 @@ public final class JacksonUtil
 	
 	/**
 	 * 
-	 * 描述: 设置日期格式，若有特殊日期时间格式
-	 * 在调用读、写方法之前，先调用此方法设置格式
-	 * 该设置会影响全局日期解析
-	 * @author  qye.zheng
-	 * @param dateFormat
-	 */
-	public static final void setDateFormat(final DateFormat dateFormat)
-	{
-		objectMapper.setDateFormat(dateFormat);
-	}	
-	
-	/**
-	 * 
 	 * 描述: 使用默认的日期格式 
 	 * @author  qye.zheng
 	 */
-	public static final void setDefaultDateFormat()
+	protected static final void setDefaultDateFormat()
 	{
-		objectMapper.setDateFormat(dateTimeFormat);
+		objectMapper.setDateFormat(new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss));
+        final JavaTimeModule javaTimeModule = new JavaTimeModule();
+        // 序列化
+        javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss)));
+        javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern(FormatConstant.DATE_FORMAT_yyyy_MM_dd)));
+        javaTimeModule.addSerializer(LocalTime.class,new LocalTimeSerializer(DateTimeFormatter.ofPattern(FormatConstant.TIME_FORMAT_HH_mm_ss)));
+        // 反序列化
+        javaTimeModule.addDeserializer(LocalDateTime.class,new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss)));
+        javaTimeModule.addDeserializer(LocalDate.class,new LocalDateDeserializer(DateTimeFormatter.ofPattern(FormatConstant.DATE_FORMAT_yyyy_MM_dd)));
+        javaTimeModule.addDeserializer(LocalTime.class,new LocalTimeDeserializer(DateTimeFormatter.ofPattern(FormatConstant.TIME_FORMAT_HH_mm_ss)));
+        
+        objectMapper.registerModule(javaTimeModule).registerModule(new ParameterNamesModule());
 	}
 	
 	/**

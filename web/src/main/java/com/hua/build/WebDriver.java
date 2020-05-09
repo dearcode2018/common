@@ -212,7 +212,7 @@ public class WebDriver {
 	private static final void copyWebClassPathFile(final File projectFile)
 	{
 		final String filePath = projectFile.getPath() + "/" + WebParam.CLASSPATH_NAME;
-		final File classPathFile = new File(ClassPathUtil.getClassSubpath(WebParam.WEB_PROJECT_CLASSPATH_PATH));
+		final File classPathFile = new File(ClassPathUtil.getClassPath(WebParam.WEB_PROJECT_CLASSPATH_PATH));
 		FileUtil.copyFile(classPathFile, filePath);
 	}
 	

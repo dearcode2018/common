@@ -12,11 +12,24 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.chrono.IsoChronology;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.hua.constant.Constant;
+import com.hua.constant.DateTimeFormat;
 import com.hua.constant.FormatConstant;
 
 /**
@@ -28,7 +41,15 @@ import com.hua.constant.FormatConstant;
  */
 public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils {
 
+	protected static final Logger log = LogManager.getLogger(DateTimeUtil.class.getName());
+	
 	/**
+	 * 1.毫秒数
+	 * 起点: 1970-01-01, 00:00:00 GMT+0 (Greenwich Mean Time 格林威治标准时间)
+	 * 正数: 之后的日期时间
+	 * 负数: 之前的日期时间
+	 * 
+	 * 
 	 日期、时间、时间戳，统一称呼为时间(time)
 	 
 	 时间有多种类型，包含有 世纪/年/月/日/星期/时/分/秒/毫秒/纳秒/时区/日历////////////////
@@ -43,22 +64,16 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 
 	 5) 日历
 	 
-	 
 	 */
 	
 	// 1分钟 毫秒数
-	public final static long MILLISECOND_PER_MINUTE = 60L * 1000;
+	public static final long MILLISECOND_PER_MINUTE = 60L * 1000;
 	// 1小时 毫秒数
-	public final static long MILLISECOND_PER_HOUR = 60L * MILLISECOND_PER_MINUTE;
+	public static final long MILLISECOND_PER_HOUR = 60L * MILLISECOND_PER_MINUTE;
 	// 1天 毫秒数
-	public final static long MILLISECOND_PER_DAY = 24L * MILLISECOND_PER_HOUR;
+	public static final long MILLISECOND_PER_DAY = 24L * MILLISECOND_PER_HOUR;
 	// 1周 毫秒数
-	public final static long MILLISECOND_PER_WEEK = 7L * MILLISECOND_PER_DAY;
-	
-	public static DateFormat dateFormat;
-	
-	// 日历对象 (不同公共化，一旦设置为公共，日历对象伴随类加载完成后，将永远保持不变)
-	//private static Calendar calendar = Calendar.getInstance();
+	public static final long MILLISECOND_PER_WEEK = 7L * MILLISECOND_PER_DAY;
 	
 	/**
 	 * 构造方法
@@ -66,9 +81,7 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @author  qye.zheng
 	 * 
 	 */
-	private DateTimeUtil()
-	{
-	}
+	private DateTimeUtil() {}
 	
 	/**
 	 * 
@@ -78,7 +91,7 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @author qye.zheng
 	 * @return
 	 */
-	public static java.sql.Date getDate() {
+	public static final java.sql.Date getDate() {
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
 		
@@ -92,11 +105,11 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @author qye.zheng
 	 * @return
 	 */
-	public static Time getTime() {
+	public static final java.sql.Time getTime() {
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
 		
-		return new Time(calendar.getTimeInMillis());
+		return new java.sql.Time(calendar.getTimeInMillis());
 	}
 	
 	/**
@@ -107,7 +120,7 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * 
 	 * @return
 	 */
-	public static java.util.Date getDateTime()
+	public static final java.util.Date getDateTime()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
@@ -123,12 +136,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * 
 	 * @return
 	 */
-	public static Timestamp getTimestamp()
+	public static final java.sql.Timestamp getTimestamp()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
 		
-		return new Timestamp(calendar.getTimeInMillis());
+		return new java.sql.Timestamp(calendar.getTimeInMillis());
 	}
 	
 	/**
@@ -141,11 +154,11 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * 
 	 * @return
 	 */
-	public static String getTsString()
+	public static final String getTsString()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
-		dateFormat = new SimpleDateFormat(FormatConstant.TIMESTAMP_FORMAT_yyyyMMddHHmmssSSS);
+		final DateFormat dateFormat = new SimpleDateFormat(FormatConstant.TIMESTAMP_FORMAT_yyyyMMddHHmmssSSS);
 		final Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
 		
 		return dateFormat.format(timestamp);
@@ -153,28 +166,27 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	
 	/**
 	 * 
-	 * 描述:  获取当前时间数值
+	 * 描述:  获取当前时间毫秒数
 	 * 从[起止时间] 到 [当前时间]的毫秒数
 	 * 
 	 * @author qye.zheng
 	 * @return
 	 */
-	public static long getTimeInMillis() {
+	public static final long getTimeInMillis() {
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
 		
 		return calendar.getTimeInMillis();
 	}
 	
-	
 	/**
 	 * 
-	 * 描述:  获取Unix timestamp
+	 * 描述:  获取Unix timestamp (秒数)
 	 * 距离1970-01-01 00:00:00 的秒数
 	 * @author qye.zheng
 	 * @return
 	 */
-	public static long getUnixTs() {
+	public static final long getUnixTs() {
 		// 每次都获取一个最新的日历 - 当前时间
 		final Calendar calendar = Calendar.getInstance();
 		//  距离1970-01-01 00:00:00.000 的毫秒数
@@ -191,56 +203,71 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * 
 	 * @return
 	 */
-	public static TimeZone getTimeZone()
+	public static final TimeZone getTimeZone()
 	{
-		final TimeZone timeZone = TimeZone.getDefault();
-		
-		return timeZone;
+		return TimeZone.getDefault();
 	}
 	
 	/**
 	 * 
 	 * 描述: 获取id获取时区
 	 * @author  qye.zheng
-	 * 
 	 * @param id 时区id，例如 中国东八区( id == GMT+8:00 或 GMT+8 )
 	 * @return
 	 */
-	public static TimeZone getTimeZone(final String id)
+	public static final TimeZone getTimeZone(final String id)
 	{
-		final TimeZone timeZone = TimeZone.getTimeZone(id);
-		
-		return timeZone;
+		return TimeZone.getTimeZone(id);
 	}
 	
 	/**
 	 * 
 	 * 描述: 获取中国所在的时区
 	 * @author  qye.zheng
-	 * 
 	 * @param id 时区id，例如 中国东八区( id == GMT+8:00 或 GMT+8 )
 	 * @return
 	 */
-	public static TimeZone getChinaTimeZone()
+	public static final TimeZone getChinaTimeZone()
 	{
-		final TimeZone timeZone = TimeZone.getTimeZone(Constant.TIME_ZONE_ID_CHINA);
-		
-		return timeZone;
+		return TimeZone.getTimeZone(Constant.TIME_ZONE_ID_CHINA);
 	}
 	
 	/**
 	 * 
-	 * 描述: 获取当前最新日历 
+	 * 描述: 获取中时区 (格林威治)
+	 * 毫秒数从 中时区 (格林威治) 1970-01-01 00:00:00.000 算起
+	 * @author  qye.zheng
+	 * @return
+	 */
+	public static final TimeZone getMedialTimeZone()
+	{
+		return TimeZone.getTimeZone(Constant.TIME_ZONE_ID_MEDIAL);
+	}
+	
+	/**
+	 * 
+	 * 描述: 获取当前时区最新日历 
 	 * @author  qye.zheng
 	 * 
 	 * @return
 	 */
-	public static Calendar getCalendar()
+	public static final Calendar getCalendar()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		
-		return calendar;
+		return Calendar.getInstance();
+	}
+	
+	/**
+	 * 
+	 * 描述: 获取中时区(格林威治) 最新日历 
+	 * @author  qye.zheng
+	 * 
+	 * @return
+	 */
+	public static final Calendar getGMTCalendar()
+	{
+		// 每次都获取一个最新的日历 - 当前时间
+		return Calendar.getInstance(getMedialTimeZone());
 	}
 	
 	/**
@@ -249,36 +276,38 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @author  qye.zheng
 	 * @return
 	 */
-	public static int getCentury()
+	public static final int getCentury()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = getCalendar();
 		final int year = calendar.get(Calendar.YEAR);
 		// 100 年为一个世纪，世纪值从1开始
-		final int result = year / 100 + Constant.ONE;
 		
-		return result;
+		return year / 100 + Constant.ONE;
 	}
 	
 	/**
 	 * 
 	 * 描述: 是否是闰年 
+	 * @see IsoChronology.isLeapYear 
 	 * @author  qye.zheng
 	 * @param year
 	 * @return
 	 */
-	public static boolean isLeapYear(final int year)
+	public static final boolean isLeapYear(final int year)
 	{
 		/*
-		 满足如下条件之一，即为闰年
-		1)  能被4整除且又不能被100整除
-		 2) 能直接被400整除
-		 
+		 * IsoChronology.isLeapYear: (被4整除) 且 (不能被100整除 或 被400整除)
+		 * 0 == year % 4 等同于 0 == (year & 3)
 		 */
-		
+		/*
+		 满足如下条件之一，即为闰年
+		1)  普通闰年: 能被4整除且又不能被100整除
+		 2) 世纪闰年: 能被400整除
+		 */
 		boolean flag = false;
-		if ((Constant.ZERO == year % 4 && Constant.ZERO != year % 100) || (Constant.ZERO == year % 400))
-		{
+		if ((0 == year % 4) && (0 != year % 100 || 0 == year % 400)) 
+		{ // 1) 被4整除 2) 不能被100整除 或被400整除
 			flag = true;
 		}
 		
@@ -287,16 +316,24 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	
 	/**
 	 * 
+	 * @description 是否为平年
+	 * @param year
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final boolean isNonleapYear(final int year) {
+		return !isLeapYear(year);
+	}
+	
+	/**
+	 * 
 	 * 描述: 获取当前年份
 	 * @author  qye.zheng
 	 * @return
 	 */
-	public static int getYear()
+	public static final int getYear()
 	{
-		final Calendar calendar = Calendar.getInstance();
-		final int year = calendar.get(Calendar.YEAR);
-		
-		return year;
+		return getCalendar().get(Calendar.YEAR);
 	}
 	
 	/**
@@ -306,14 +343,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getYear(final java.sql.Date date)
+	public static final int getYear(final java.sql.Date date)
 	{
-		final Calendar calendar = Calendar.getInstance();
-		// 设置时间
-		calendar.setTime(date);
-		final int year = calendar.get(Calendar.YEAR);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(date);
 		
-		return year;
+		return builder.build().get(Calendar.YEAR);
 	}
 	
 	/**
@@ -323,14 +358,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param dateTime
 	 * @return
 	 */
-	public static int getYear(final java.util.Date dateTime)
+	public static final int getYear(final java.util.Date dateTime)
 	{
-		final Calendar calendar = Calendar.getInstance();
-		// 设置时间
-		calendar.setTime(dateTime);
-		final int year = calendar.get(Calendar.YEAR);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(dateTime);
 		
-		return year;
+		return builder.build().get(Calendar.YEAR);
 	}
 	
 	/**
@@ -340,14 +373,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timestamp
 	 * @return
 	 */
-	public static int getYear(final java.sql.Timestamp timestamp)
+	public static final int getYear(final java.sql.Timestamp timestamp)
 	{
-		final Calendar calendar = Calendar.getInstance();
-		// 设置时间
-		calendar.setTime(timestamp);
-		final int year = calendar.get(Calendar.YEAR);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(timestamp);
 		
-		return year;
+		return builder.build().get(Calendar.YEAR);
 	}
 	
 	/**
@@ -358,14 +389,10 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getMonth()
+	public static final int getMonth()
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
 		// 获取的月份基数是从0开始的，例如 7月份，返回数字 6, 因此数字需要+1
-		final int month = calendar.get(Calendar.MONTH) + Constant.ONE;
-		
-		return month;
+		return getCalendar().get(Calendar.MONTH) + Constant.ONE;
 	}
 	
 	/**
@@ -376,15 +403,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getMonth(final java.sql.Date date)
+	public static final int getMonth(final java.sql.Date date)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(date);
 		// 获取的月份基数是从0开始的，例如 7月份，返回数字 6, 因此数字需要+1
-		final int month = calendar.get(Calendar.MONTH) + Constant.ONE;
-		
-		return month;
+		return builder.build().get(Calendar.MONTH) + Constant.ONE;
 	}
 	
 	/**
@@ -392,18 +416,15 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * 描述: 获取月份数( [1 - 12] )
 	 * @author  qye.zheng
 	 * 
-	 * @param date
+	 * @param dateTime
 	 * @return
 	 */
-	public static int getMonth(final java.util.Date date)
+	public static final int getMonth(final java.util.Date dateTime)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(dateTime);
 		// 获取的月份基数是从0开始的，例如 7月份，返回数字 6, 因此数字需要+1
-		final int month = calendar.get(Calendar.MONTH) + Constant.ONE;
-		
-		return month;
+		return builder.build().get(Calendar.MONTH) + Constant.ONE;
 	}
 	
 	/**
@@ -414,15 +435,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timestamp
 	 * @return
 	 */
-	public static int getMonth(final java.sql.Timestamp timestamp)
+	public static final int getMonth(final java.sql.Timestamp timestamp)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(timestamp);
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(timestamp);
 		// 获取的月份基数是从0开始的，例如 7月份，返回数字 6, 因此数字需要+1
-		final int month = calendar.get(Calendar.MONTH) + Constant.ONE;
-		
-		return month;
+		return builder.build().get(Calendar.MONTH) + Constant.ONE;
 	}
 	
 	/**
@@ -432,13 +450,10 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getDayOfMonth()
+	public static final int getDayOfMonth()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		
-		return  day;
+		return  getCalendar().get(Calendar.DAY_OF_MONTH);
 	}
 	
 	/**
@@ -448,14 +463,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getDayOfMonth(final java.sql.Date date)
+	public static final int getDayOfMonth(final java.sql.Date date)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		
-		return  day;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(date);
+		 
+		return builder.build().get(Calendar.DAY_OF_MONTH);
 	}
 	
 	/**
@@ -465,14 +478,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getDayOfMonth(final java.util.Date dateTime)
+	public static final int getDayOfMonth(final java.util.Date dateTime)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dateTime);
-		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		
-		return  day;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(dateTime);
+		 
+		return builder.build().get(Calendar.DAY_OF_MONTH);
 	}
 	
 	/**
@@ -482,14 +493,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getDayOfMonth(final java.sql.Timestamp timestamp)
+	public static final int getDayOfMonth(final java.sql.Timestamp timestamp)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(timestamp);
-		final int day = calendar.get(Calendar.DAY_OF_MONTH);
-		
-		return  day;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(timestamp);
+		 
+		return builder.build().get(Calendar.DAY_OF_MONTH);
 	}
 	
 	/**
@@ -498,13 +507,10 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @author  qye.zheng
 	 * @return
 	 */
-	public static int getDayOfYear()
+	public static final int getDayOfYear()
 	{
 		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		final int year = calendar.get(Calendar.DAY_OF_YEAR);
-		
-		return  year;
+		return  getCalendar().get(Calendar.DAY_OF_YEAR);
 	}
 	
 	/**
@@ -514,14 +520,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static int getDayOfYear(final java.sql.Date date)
+	public static final int getDayOfYear(final java.sql.Date date)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		final int year = calendar.get(Calendar.DAY_OF_YEAR);
-		
-		return  year;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(date);
+		 
+		return builder.build().get(Calendar.DAY_OF_YEAR);
 	}
 	
 	/**
@@ -531,14 +535,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param dateTime
 	 * @return
 	 */
-	public static int getDayOfYear(final java.util.Date dateTime)
+	public static final int getDayOfYear(final java.util.Date dateTime)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dateTime);
-		final int year = calendar.get(Calendar.DAY_OF_YEAR);
-		
-		return  year;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(dateTime);
+		 
+		return builder.build().get(Calendar.DAY_OF_YEAR);
 	}
 	
 	/**
@@ -548,14 +550,12 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timestamp
 	 * @return
 	 */
-	public static int getDayOfYear(final java.sql.Timestamp timestamp)
+	public static final int getDayOfYear(final java.sql.Timestamp timestamp)
 	{
-		// 每次都获取一个最新的日历 - 当前时间
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(timestamp);
-		final int year = calendar.get(Calendar.DAY_OF_YEAR);
-		
-		return  year;
+		 final Calendar.Builder builder = new Calendar.Builder();
+		 builder.setInstant(timestamp);
+		 
+		return builder.build().get(Calendar.DAY_OF_YEAR);
 	}
 	
 	/**
@@ -567,11 +567,9 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param time
 	 * @return
 	 */
-	public static String format(final java.sql.Date date)
+	public static final String format(final java.sql.Date date)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.DATE_FORMAT_yyyy_MM_dd);
-		
-		return dateFormat.format(date);
+		return defaultDateFormat().format(date);
 	}
 	
 	/**
@@ -583,11 +581,9 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param date
 	 * @return
 	 */
-	public static String format(final Time time)
+	public static final String format(final Time time)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.TIME_FORMAT_HH_mm_ss);
-		
-		return dateFormat.format(time);
+		return defaultTimeFormat().format(time);
 	}
 	
 	/**
@@ -599,11 +595,9 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param dateTime
 	 * @return
 	 */
-	public static String format(final java.util.Date dateTime)
+	public static final String format(final java.util.Date dateTime)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss);
-		
-		return dateFormat.format(dateTime);
+		return defaultDateTimeFormat().format(dateTime);
 	}
 	
 	/**
@@ -614,11 +608,9 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timestamp
 	 * @return
 	 */
-	public static String format(final Timestamp timestamp)
+	public static final String format(final Timestamp timestamp)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.TIMESTAMP_FORMAT_yyyy_MM_dd_HH_mm_ss_SSS);
-		
-		return dateFormat.format(timestamp);
+		return defaultTimeFormat().format(timestamp);
 	}
 	
 	/**
@@ -628,16 +620,15 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param dateStr
 	 * @return
 	 */
-	public static java.sql.Date parseDate(final String dateStr)
+	public static final java.sql.Date parseDate(final String dateStr)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.DATE_FORMAT_yyyy_MM_dd);
 		java.sql.Date resultDate = null;
 		try
 		{
-			resultDate = new java.sql.Date(dateFormat.parse(dateStr).getTime());
+			resultDate = new java.sql.Date(defaultDateFormat().parse(dateStr).getTime());
 		} catch (ParseException e)
 		{
-			e.printStackTrace();
+			log.error("将[日期字符串]: {} 转成 [日期对象] 异常: {}", dateStr, e);
 		}
 		
 		return resultDate;
@@ -650,16 +641,15 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timeStr
 	 * @return
 	 */
-	public static java.sql.Time parseTime(final String timeStr)
+	public static final java.sql.Time parseTime(final String timeStr)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.TIME_FORMAT_HH_mm_ss);
 		java.sql.Time resultTime = null;
 		try
 		{
-			resultTime = new java.sql.Time(dateFormat.parse(timeStr).getTime());
+			resultTime = new java.sql.Time(defaultTimeFormat().parse(timeStr).getTime());
 		} catch (ParseException e)
 		{
-			e.printStackTrace();
+			log.error("将[时间字符串]: {} 转成 [时间对象] 异常: {}", timeStr, e);
 		}
 		
 		return resultTime;
@@ -672,19 +662,51 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param dateTimeStr
 	 * @return
 	 */
-	public static java.util.Date parseDateTime(final String dateTimeStr)
+	public static final java.util.Date parseDateTime(final String dateTimeStr)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		java.util.Date resultDateTime = null;
 		try
 		{
-			resultDateTime = dateFormat.parse(dateTimeStr);
+			resultDateTime = defaultDateTimeFormat().parse(dateTimeStr);
 		} catch (ParseException e)
 		{
-			e.printStackTrace();
+			log.error("将[日期时间字符串]: {} 转成 [日期时间对象] 异常: {}", dateTimeStr, e);
 		}
 		
 		return resultDateTime;
+	}
+	
+	/**
+	 * 
+	 * @description 转换时间
+	 * @param date 时间
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalTime fromTime(final String time){
+		return LocalTime.parse(time, DateTimeFormatter.ofPattern(FormatConstant.TIME_FORMAT_HH_mm_ss));
+	}
+	
+	/**
+	 * 
+	 * @description 转换日期
+	 * @param date 日期
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate fromDate(final String date) {
+		return LocalDate.parse(date, DateTimeFormatter.ofPattern(FormatConstant.DATE_FORMAT_yyyy_MM_dd));
+	}
+	
+	/**
+	 * 
+	 * @description 转换日期时间
+	 * @param dateTime 日期时间
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDateTime fromDateTime(final String dateTime) {
+		return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss));
 	}
 	
 	/**
@@ -694,16 +716,15 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	 * @param timestampStr
 	 * @return
 	 */
-	public static java.sql.Timestamp parseTimestamp(final String timestampStr)
+	public static final java.sql.Timestamp parseTimestamp(final String timestampStr)
 	{
-		dateFormat = new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss);
 		java.sql.Timestamp resultTimestamp = null;
 		try
 		{
-			resultTimestamp = new java.sql.Timestamp(dateFormat.parse(timestampStr).getTime());
+			resultTimestamp = new java.sql.Timestamp(defaultDateTimeFormat().parse(timestampStr).getTime());
 		} catch (ParseException e)
 		{
-			e.printStackTrace();
+			log.error("将[时间戳字符串]: {} 转成 [时间戳对象] 异常: {}", timestampStr, e);
 		}
 		
 		return resultTimestamp;
@@ -712,64 +733,53 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 	/**
 	 * 
 	 * @description 
-	 * @param date
-	 * @param format
+	 * @param dateTime 日期时间
+	 * @param format 格式
 	 * @return
 	 * @author qye.zheng
 	 */
-	public static Date stringToDate(String date, String format)
+	public static final java.util.Date convertToDate(final String dateTime, final String format)
 	{
-		if (date == null || format == null || date == "")
+		if (StringUtil.isEmpty(dateTime) || StringUtil.isEmpty(format))
 		{
 			return null;
 		}
 		try
 		{
-			return new SimpleDateFormat(format).parse(date);
-		} catch (ParseException ex)
+			return new SimpleDateFormat(format).parse(dateTime);
+		} catch (Exception e)
 		{
-			return null;
+			log.error("将[日期时间字符串]: {} 转成格式: {} [日期时间对象] 异常: {}", dateTime, format, e);
 		}
+		
+		return null;
 	}
 	
 	/**
 	 * 
-	 * @description 
+	 * @description 自动 日期时间转换 (支持多种自定义格式)
 	 * @param value
 	 * @return
 	 * @author qianye.zheng
 	 */
-	public static Date parseStandardDate(String value)
+	public static final Date autoParse(final String value)
 	{
-		Date date = null;
-		int n = value.length();
+		final int length = value.length();
 		try
 		{
-			if (n >= "yyyy-MM-dd HH:mm:ss.S".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(value);
-			} else if (n == "yyyy-MM-dd HH:mm:ss".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(value);
-			} else if (n == "yyyy-MM-dd HH:mm".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(value);
-			} else if (n == "yyyy-MM-dd HH".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM-dd HH").parse(value);
-			} else if (n == "yyyy-MM-dd".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM-dd").parse(value);
-			} else if (n == "yyyy-MM".length())
-			{
-				date = new SimpleDateFormat("yyyy-MM").parse(value);
+			final DateTimeFormat[] values = DateTimeFormat.values();
+			for (DateTimeFormat e : values) {
+				if (length == e.getValue().length()) {
+					
+					return e.getDateFormat().parse(value);
+				}
 			}
 		} catch (ParseException e)
 		{
-			//Log log = LogFactory.getLog(DateTimeUtil.class.getName());
-			//log.warn("Can not parse [" + value + "] to java.util.Date");
+			log.error("自动转换 [字符串]: {} 转换[日期时间对象] 异常: {}", value, e);
 		}
-		return date;
+		
+		return null;
 	}
 	
 	/**
@@ -811,5 +821,130 @@ public final class DateTimeUtil extends org.apache.commons.lang3.time.DateUtils 
 		
 		return cal.getTime();
 	}
+	
+	/**
+	 * 
+	 * @description 默认时间格式
+	 * @return
+	 * @author qianye.zheng
+	 */
+	private static final DateFormat defaultTimeFormat() {
+		return new SimpleDateFormat(FormatConstant.TIME_FORMAT_HH_mm_ss);
+	}
+	
+	/**
+	 * 
+	 * @description 默认日期格式
+	 * @return
+	 * @author qianye.zheng
+	 */
+	private static final DateFormat defaultDateFormat() {
+		return new SimpleDateFormat(FormatConstant.DATE_FORMAT_yyyy_MM_dd);
+	}
+	
+	/**
+	 * 
+	 * @description 默认日期时间格式
+	 * @return
+	 * @author qianye.zheng
+	 */
+	private static final DateFormat defaultDateTimeFormat() {
+		return new SimpleDateFormat(FormatConstant.DATE_TIME_FORMAT_yyyy_MM_dd_HH_mm_ss);
+	}
+	
+	
+	/* ================================================================================= */
+	
+	/**
+	 * 
+	 * @description 本地当前时间
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalTime localTime() {
+		return LocalTime.now();
+	}
+	
+	/**
+	 * 
+	 * @description 本地当前日期
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate localDate() {
+		return LocalDate.now();
+	}
+	
+	/**
+	 * 
+	 * @description 本地当前日期时间
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDateTime localDateTime() {
+		return LocalDateTime.now();
+	}
+
+	/**
+	 * 
+	 * @description 获取当周的第一天（周日）的日期
+	 * @return 当周的第一天（周日）的日期
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate getStartDateOfCurrentWeek(){
+		return LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(),1);
+	}
+
+	/**
+	 * 
+	 * @description 获取当周的最后一天（周六）的日期
+	 * @return 当周的最后一天（周六）的日期
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate getEndDateOfCurrentWeek(){
+		return LocalDate.now().with(WeekFields.of(Locale.getDefault()).dayOfWeek(),7);
+	}
+
+	/**
+	 * 
+	 * @description 获取当月第一天的日期
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate getStartDateOfCurrentMonth(){
+		return LocalDate.now().withDayOfMonth(1);
+	}
+
+	/**
+	 * 
+	 * @description 获取当月最后一天的日期
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final LocalDate getEndDateOfCurrentMonth(){
+		return LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+	}
+
+	/**
+	 * 
+	 * @description  根据给出的时间，获取其处于一年中的第几周
+	 * @param accessor
+	 * @return 一年中的第几周 [1,52]
+	 * @author qianye.zheng
+	 */
+	public static final Integer getWeekOfYear(final TemporalAccessor accessor) {
+		int weekNum = accessor.get(WeekFields.of(Locale.getDefault()).weekOfYear());
+		return weekNum > 52 ? weekNum - 52 : weekNum;
+	}
+
+	/**
+	 * 获取给定LocalDateTime的毫秒数
+	 * @param time 时间
+	 * @return the number of milliseconds since January 1, 1970, 00:00:00 GMT represented by this date
+	 */
+	public static final long getTime(final LocalDateTime time) {
+		return java.util.Date.from(time.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+	}
+
 	
 }
