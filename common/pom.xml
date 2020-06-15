@@ -42,7 +42,7 @@
 		<aspectj.version>1.8.5</aspectj.version>
 
 		<!-- 集合 -->
-		<commons.collections.version>3.2.1</commons.collections.version>
+		<commons.collections.version>3.2.2</commons.collections.version>
 
 		<!-- xml -->
 		<dom4j.version>1.6.1</dom4j.version>
