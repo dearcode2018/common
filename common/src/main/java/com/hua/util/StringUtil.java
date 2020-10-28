@@ -474,4 +474,23 @@ public final class StringUtil extends org.apache.commons.lang3.StringUtils {
 		return array;
 	}
 	
+	/**
+	 * 
+	 * @description 中文字符转成unicode编码
+	 * 例如，中文 对应的unicode编码为: \u4e2d\u6587
+	 * 便于在有些环境，将字符快速转成unicode编码
+	 * @param value
+	 * @return
+	 * @author qianye.zheng
+	 */
+	public static final String chineseToUnicode(final String value) {
+		final StringBuilder builder = getBuilder();
+		final int len = value.length();
+		for (int i = 0; i < len; i++) {
+			builder.append("\\u" + Integer.toHexString(value.codePointAt(i)));
+		}
+		
+		return builder.toString();
+	}
+	
 }
