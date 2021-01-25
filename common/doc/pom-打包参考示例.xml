@@ -4,13 +4,13 @@
 	
 	<groupId>com.hua</groupId>
 	<artifactId>maven-build</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>maven-build</name>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.version>0.0.1</maven.version>
+		<maven.version>1.0.0</maven.version>
 		<maven.plugin.compiler.version>3.3</maven.plugin.compiler.version>
 		<maven.plugin.source.version>2.4</maven.plugin.source.version>
 		<maven.plugin.surefire.version>2.18.1</maven.plugin.surefire.version>
@@ -94,7 +94,7 @@
 				</executions>
 				<configuration>
 					<!-- 指定源码文件名 -->
-<!-- 					<finalName>maven-build-0.0.1-sources.jar</finalName> -->
+<!-- 					<finalName>maven-build-1.0.0-sources.jar</finalName> -->
 				</configuration>
 			</plugin>
 

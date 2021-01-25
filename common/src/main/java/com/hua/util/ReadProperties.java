@@ -86,6 +86,18 @@ public final class ReadProperties {
 		
 		return message;
 	}
+	
+	   /**
+     * 描述: 根据key获取相应的值 
+     * @author qye.zheng
+     * 
+     * @param key
+     * @return
+     */
+    public String getPropertyOrDefault(final String key, final String defaultValue) {
+        
+        return props.getProperty(key, defaultValue);
+    }
 
 	/**
 	 * @return the props

@@ -82,9 +82,6 @@ public final class StringUtil extends org.apache.commons.lang3.StringUtils {
 				if (!isEmpty(target[i]))
 				{
 					return false;
-				} else
-				{
-					continue;
 				}
 			}
 		}
