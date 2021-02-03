@@ -31,7 +31,7 @@
 		<commons.configuration.version>1.10</commons.configuration.version>
 		<commons.digester.version>2.1</commons.digester.version>
 		<!-- ant -->
-		<apache.ant.version>1.9.4</apache.ant.version>
+		<apache.ant.version>1.10.9</apache.ant.version>
 
 		<!-- proxy -->
 		<cglib.version>3.1</cglib.version>
