@@ -246,6 +246,9 @@ public final class Constant {
 	// 中时区 (格林威治)
 	public static final String TIME_ZONE_ID_MEDIAL = "GMT";
 	
+	// 默认地区位移
+	public static final String DEFAULT_ZONE_OFFSET = "+8";
+	
 	/** end of 时间常量 */
 	
 	/** begin 加密/解密 */
@@ -291,4 +294,5 @@ public final class Constant {
 	
 	/** end of 日期格式 */
 	
+	  public static final String TIME_ZONE = "GMT+8";
 }

@@ -56,7 +56,7 @@ public final class Log4j2Test extends BaseTest {
 	@Test
 	public void testLog4j2() {
 		try {
-			
+		
 			log.info("test log4j2, info: " + Log4j2Test.class.getName());
 			log.trace("test log4j2 trace: " + Log4j2Test.class.getName());
 			//ConsoleAppender
