@@ -112,7 +112,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.plugin.compiler.version}</version>
 				<configuration>
 					<compilerVersion>${jdk.version}</compilerVersion>
 					<!-- 编译的类文件是否包含调试信息 -->
@@ -154,7 +153,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>${maven.plugin.resources.version}</version>
 				<configuration>
 					<!-- 指定文件的编码 -->
 					<encoding>${project.build.sourceEncoding}</encoding>
